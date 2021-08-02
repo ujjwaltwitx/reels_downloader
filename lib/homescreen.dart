@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +35,7 @@ class HomeScreen extends ConsumerWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.pink[400],
-          title: const Text('Insta Reels Saver' + '	🤫'),
+          title: const Text('Insta Reels Saver'),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 5),
@@ -88,16 +87,17 @@ class HomeScreen extends ConsumerWidget {
               // ignore: deprecated_member_use
               child: RaisedButton(
                 onPressed: () async {
-                  await DownloadServices.instance
-                      .downloadReels(textValue.text, context);
-                  await Future.delayed(const Duration(seconds: 1));
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Saving to Download folder"),
-                  ));
-                  if (AdServices.rewardedAd == null) {
-                    AdServices.createRewardedAd();
+                  try {
+                    await DownloadServices.instance
+                        .downloadReels(textValue.text, context);
+                    await Future.delayed(const Duration(milliseconds: 600));
+                    if (percentage.adCount % 3 == 0) {
+                      AdServices.createRewardedAd();
+                      AdServices.showRewardedAd();
+                    }
+                  } catch (e) {
+                    rethrow;
                   }
-                  AdServices.showRewardedAd();
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),

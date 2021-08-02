@@ -18,6 +18,7 @@ class DownloadServices extends ChangeNotifier {
   String downVar = 'Download';
   String copyValue = '';
   int coin = 0;
+  int adCount = 2;
 
   int percentage = 0;
 
@@ -76,6 +77,8 @@ class DownloadServices extends ChangeNotifier {
 
       directory = Directory(downloadPath);
 
+      adCount += 1;
+
       if (File('${directory.path}/${id.toString()}.mp4').existsSync()) {
         return ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -94,7 +97,14 @@ class DownloadServices extends ChangeNotifier {
         }
         notifyListeners();
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Saved To Download Folder"),
+        ),
+      );
       copyValue = '';
+
       notifyListeners();
     } catch (e) {
       rethrow;
