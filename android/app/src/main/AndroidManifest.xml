@@ -4,7 +4,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="ReelsSaver"
+        android:label="Insta Reels Saver"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
