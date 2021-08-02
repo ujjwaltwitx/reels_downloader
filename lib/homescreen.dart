@@ -36,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.pink[400],
-          title: const Text('ReelsSaver' + '	🤫'),
+          title: const Text('Insta Reels Saver' + '	🤫'),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 5),
