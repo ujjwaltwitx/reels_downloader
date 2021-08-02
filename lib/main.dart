@@ -34,8 +34,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {}
     if (state == AppLifecycleState.resumed) {
-      DownloadServices.instance.getClipData();
       AdServices.createRewardedAd();
+      if (DownloadServices.instance.percentage == 100) {
+        DownloadServices.instance.gotBackground();
+      }
     }
   }
 
@@ -49,6 +51,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     getPermission();
+    DownloadServices.instance.getClipData();
     return MediaQuery(
       data: const MediaQueryData(),
       child: MaterialApp(

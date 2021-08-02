@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DownloadServices extends ChangeNotifier {
   factory DownloadServices() {
-    instance.getClipData();
     return instance;
   }
 
@@ -17,7 +17,7 @@ class DownloadServices extends ChangeNotifier {
   String downVar = 'Download';
   String copyValue = '';
   int coin = 0;
-  bool copyText = true;
+
   int percentage = 0;
 
   Future<void> getClipData() async {
@@ -29,11 +29,18 @@ class DownloadServices extends ChangeNotifier {
           notifyListeners();
         }
       }
-      copyText = true;
+
+      notifyListeners();
     });
   }
 
-  Future<void> downloadReels(String link) async {
+  void gotBackground() {
+    downVar = 'Download';
+    percentage = 0;
+    notifyListeners();
+  }
+
+  Future<void> downloadReels(String link, BuildContext context) async {
     if (await Permission.storage.isGranted) {
     } else {
       await Permission.storage.request();
@@ -67,6 +74,14 @@ class DownloadServices extends ChangeNotifier {
       downloadPath += '/Download';
 
       directory = Directory(downloadPath);
+
+      if (File('${directory.path}/${id.toString()}.mp4').existsSync()) {
+        return ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Video already exists in Download folder"),
+          ),
+        );
+      }
 
       await dio.download(videoUrl, '${directory.path}/${id.toString()}.mp4',
           onReceiveProgress: (rec, total) {
