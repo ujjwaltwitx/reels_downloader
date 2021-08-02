@@ -142,9 +142,7 @@ class HomeScreen extends ConsumerWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // ignore: deprecated_member_use
-                      FlatButton(
-                        splashColor: Colors.pink[100],
+                      TextButton(
                         onPressed: () {
                           showDialog(
                             context: context,
@@ -159,9 +157,7 @@ class HomeScreen extends ConsumerWidget {
                           style: TextStyle(color: Colors.pink),
                         ),
                       ),
-                      // ignore: deprecated_member_use
-                      FlatButton(
-                        splashColor: Colors.pink[100],
+                      TextButton(
                         onPressed: () {
                           showDialog(
                             context: context,
