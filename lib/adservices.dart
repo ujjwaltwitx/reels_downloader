@@ -1,6 +1,8 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'download_services.dart';
 
+//controlls ads
+
 // ignore: avoid_classes_with_only_static_members
 class AdServices {
   static RewardedAd rewardedAd;
