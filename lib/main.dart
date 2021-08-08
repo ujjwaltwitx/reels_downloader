@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'adservices.dart';
-import 'download_services.dart';
-import 'homescreen.dart';
+import 'controller/ads/adservices.dart';
+import 'controller/download_controller/download_services.dart';
+import 'view/mainpage/page/mainpage.dart';
 
+// https://www.instagram.com/reel/CRgPdtWFw7H/?utm_medium=copy_link
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   AdServices.initialize();
-  runApp(ProviderScope(child: HomePage()));
+  runApp(ProviderScope(child: LandingPage()));
 }
 
-class HomePage extends StatefulWidget {
+class LandingPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _LandingPageState createState() => _LandingPageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -35,9 +36,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {}
     if (state == AppLifecycleState.resumed) {
       AdServices.createRewardedAd();
-      if (DownloadServices.instance.percentage == 100) {
-        DownloadServices.instance.gotBackground();
-      }
     }
   }
 
@@ -56,7 +54,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       data: const MediaQueryData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        home: MainPage(),
       ),
     );
   }
