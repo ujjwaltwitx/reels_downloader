@@ -4,17 +4,22 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+final downloadServicesProvider =
+    ChangeNotifierProvider<DownloadServices>((ref) {
+  return DownloadServices();
+});
+
 //singleton class
 class DownloadServices extends ChangeNotifier {
-  factory DownloadServices() {
-    return instance;
-  }
-
+  factory DownloadServices() => instance;
   DownloadServices._instantiate();
   static final instance = DownloadServices._instantiate();
+
+  String thumbnailUrl = '';
 
   String copyValue = '';
   Future<void> getClipData() async {
@@ -26,16 +31,13 @@ class DownloadServices extends ChangeNotifier {
           notifyListeners();
         }
       }
-
       notifyListeners();
     });
   }
 
   Future<String> getDir() async {
     String downloadPath = '';
-
     final directory = await getExternalStorageDirectory();
-
     final List<String> pathParts = directory.path.split('/');
     for (int i = 1; i < pathParts.length; i++) {
       if (pathParts[i] != 'Android') {
@@ -53,7 +55,6 @@ class DownloadServices extends ChangeNotifier {
       } else {
         await Permission.storage.request();
       }
-
       final Dio dio = Dio();
       final linkEdit = link.replaceAll(" ", "").split("/");
       final downloadURL = await dio.get(
@@ -62,29 +63,36 @@ class DownloadServices extends ChangeNotifier {
       final videoUrl =
           downloadURL.data['graphql']["shortcode_media"]['video_url'] as String;
       final id = downloadURL.data['graphql']["shortcode_media"]['id'];
-
-      final directory = Directory(getDir() as String);
-
-      if (File('${directory.path}/${id.toString()}.mp4').existsSync()) {
-        return ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Video already exists in Download folder"),
-          ),
-        );
-      }
-
-      await dio.download(videoUrl, '${directory.path}/${id.toString()}.mp4',
-          onReceiveProgress: (rec, total) {
-        notifyListeners();
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Saved To Download Folder"),
-        ),
-      );
-
+      thumbnailUrl = downloadURL.data['graphql']["shortcode_media"]
+          ['display_url'] as String;
       notifyListeners();
+      final accountThumbnailUrl = downloadURL.data['graphql']["shortcode_media"]
+          ['owner']['profile_pic_url'] as String;
+      final accountName = downloadURL.data['graphql']["shortcode_media"]
+          ['owner']['username'] as String;
+
+      // final String tempDir = await getDir();
+      // final directory = Directory(tempDir);
+
+      // if (File('${directory.path}/${id.toString()}.mp4').existsSync()) {
+      //   return ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text("Video already exists in Download folder"),
+      //     ),
+      //   );
+      // }
+
+      // await dio.download(videoUrl, '${directory.path}/${id.toString()}.mp4',
+      //     onReceiveProgress: (rec, total) {
+      //   notifyListeners();
+      // });
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text("Saved To Download Folder"),
+      //   ),
+      // );
+
     } catch (e) {
       rethrow;
     }

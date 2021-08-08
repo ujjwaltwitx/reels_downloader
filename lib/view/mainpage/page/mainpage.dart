@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reels_downloader/controller/main_page_controller.dart';
-import 'package:reels_downloader/view/mainpage/widgets/home_widget.dart';
+import 'package:reels_downloader/view/mainpage/widgets/download_widget.dart';
+import '../../../controller/mainpage/main_page_controller.dart';
+import '../widgets/home_widget.dart';
 
 final mainControllerProvider =
     ChangeNotifierProvider<MainPageController>((ref) {
@@ -9,7 +10,7 @@ final mainControllerProvider =
 });
 
 class MainPage extends ConsumerWidget {
-  final widgetList = [HomeWidget(), HomeWidget()];
+  final widgetList = [HomeWidget(), DownloadWidget()];
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final statusHeight = MediaQuery.of(context).padding.top;

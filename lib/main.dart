@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'controller/ads/adservices.dart';
+
 import 'controller/download_controller/download_services.dart';
+import 'model/ads/ad_model.dart';
 import 'view/mainpage/page/mainpage.dart';
 
 // https://www.instagram.com/reel/CRgPdtWFw7H/?utm_medium=copy_link

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reels_downloader/view/mainpage/widgets/manula_widget.dart';
+import 'package:reels_downloader/controller/download_controller/download_services.dart';
+import 'manula_widget.dart';
 import 'recents.dart';
 
 class HomeWidget extends StatelessWidget {
@@ -45,7 +46,11 @@ class HomeWidget extends StatelessWidget {
                 Expanded(
                   child: MaterialButton(
                     splashColor: Colors.transparent,
-                    onPressed: () {},
+                    onPressed: () {
+                      DownloadServices.instance.downloadReels(
+                          'https://www.instagram.com/reel/CRgPdtWFw7H/?utm_medium=copy_link',
+                          context);
+                    },
                     color: Colors.pink,
                     elevation: 0,
                     child: const Text(
@@ -57,7 +62,7 @@ class HomeWidget extends StatelessWidget {
               ],
             ),
             SizedBox(
-                height: constraints.maxHeight * 0.2,
+                height: constraints.maxHeight * 0.25,
                 child: Recents(constraints)),
             Expanded(child: ManualWidget())
           ],
