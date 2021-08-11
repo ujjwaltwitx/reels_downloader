@@ -21,23 +21,27 @@ environment:
   sdk: ">=2.11.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   auto_size_text: ^2.1.0
   cupertino_icons: ^1.0.2
   dio: ^4.0.0
+  flutter:
+    sdk: flutter
   flutter_markdown: ^0.6.4
   flutter_riverpod: ^0.14.0+3
   flutter_svg: ^0.22.0
   google_mobile_ads: ^0.13.2+1
+  hive: ^2.0.4
+  hive_flutter: ^1.1.0
   lint: ^1.5.3
   path_provider: ^2.0.2
   permission_handler: ^8.1.4+2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.9.1
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.1
+  hive_generator: ^1.1.0
+  build_runner: ^2.1.0  
 
 flutter_icons:
   android: true

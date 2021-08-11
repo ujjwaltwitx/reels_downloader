@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
+import 'package:reels_downloader/main.dart';
+import 'package:reels_downloader/model/video/video_model.dart';
+import 'package:reels_downloader/view/mainpage/widgets/download_status.dart';
+import 'package:reels_downloader/view/mainpage/widgets/recents.dart';
 import 'manula_widget.dart';
-import 'recents.dart';
 
-class HomeWidget extends StatelessWidget {
+class HomeWidget extends ConsumerWidget {
+  final textController = TextEditingController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final downProvider = watch(downloadNotifier);
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -15,6 +22,7 @@ class HomeWidget extends StatelessWidget {
             SizedBox(
               height: constraints.maxHeight * 0.1,
               child: TextField(
+                controller: textController,
                 decoration: InputDecoration(
                   hintText: "Paste Instagram URL here....",
                   filled: true,
@@ -45,12 +53,14 @@ class HomeWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: MaterialButton(
+                    disabledColor: Colors.pinkAccent,
                     splashColor: Colors.transparent,
-                    onPressed: () {
-                      DownloadServices.instance.downloadReels(
-                          'https://www.instagram.com/reel/CRgPdtWFw7H/?utm_medium=copy_link',
-                          context);
-                    },
+                    onPressed: downProvider.isButtonDisabled
+                        ? null
+                        : () {
+                            DownloadServices.instance.downloadReels(
+                                textController.text.toString(), context);
+                          },
                     color: Colors.pink,
                     elevation: 0,
                     child: const Text(
@@ -62,8 +72,10 @@ class HomeWidget extends StatelessWidget {
               ],
             ),
             SizedBox(
-                height: constraints.maxHeight * 0.25,
-                child: Recents(constraints)),
+                height: constraints.maxHeight * 0.2,
+                child: Hive.box<VideoModel>(videoBox).values.isEmpty
+                    ? Recents(constraints)
+                    : DownloadStatusWidget()),
             Expanded(child: ManualWidget())
           ],
         ),
