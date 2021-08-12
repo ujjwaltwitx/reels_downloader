@@ -40,7 +40,7 @@ class DownloadStatusWidget extends ConsumerWidget {
                             height: constraints.maxHeight * 1,
                             width: constraints.maxWidth * 0.16,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(8),
                               child: Image.network(
                                 box.values.last.thumbnailUrl,
                                 fit: BoxFit.cover,

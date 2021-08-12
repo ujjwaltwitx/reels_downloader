@@ -48,13 +48,13 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
   //   WidgetsBinding.instance.removeObserver(this);
   // }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.paused) {}
-  //   if (state == AppLifecycleState.resumed) {
-  //     AdServices.createRewardedAd();
-  //   }
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {}
+    if (state == AppLifecycleState.resumed) {
+      DownloadServices.instance.intentCount = 0;
+    }
+  }
 
   Future<void> getPermission() async {
     if (await Permission.storage.isGranted) {

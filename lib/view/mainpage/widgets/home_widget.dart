@@ -6,13 +6,39 @@ import 'package:reels_downloader/main.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:reels_downloader/view/mainpage/widgets/download_status.dart';
 import 'package:reels_downloader/view/mainpage/widgets/recents.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'manula_widget.dart';
 
 class HomeWidget extends ConsumerWidget {
   final textController = TextEditingController();
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final downProvider = watch(downloadNotifier);
+
+    if (downProvider.intentCount == 0) {
+      ReceiveSharingIntent.getInitialText().then((String value) {
+        downProvider.getUrlFromOtherApp(value);
+        if (downProvider.copyValue.isEmpty) {
+        } else {
+          textController.text = downProvider.copyValue;
+        }
+      });
+
+      ReceiveSharingIntent.getTextStream().listen(
+        (String data) {
+          downProvider.getUrlFromOtherApp(data);
+          if (downProvider.copyValue.isEmpty) {
+          } else {
+            textController.text = downProvider.copyValue;
+          }
+        },
+        cancelOnError: true,
+      );
+
+      downProvider.intentCount++;
+    } else {}
+
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -72,10 +98,16 @@ class HomeWidget extends ConsumerWidget {
               ],
             ),
             SizedBox(
-                height: constraints.maxHeight * 0.2,
-                child: Hive.box<VideoModel>(videoBox).values.isEmpty
-                    ? Recents(constraints)
-                    : DownloadStatusWidget()),
+              height: constraints.maxHeight * 0.2,
+              child: ValueListenableBuilder(
+                valueListenable: Hive.box<VideoModel>(videoBox).listenable(),
+                builder: (context, Box<VideoModel> box, _) {
+                  return Hive.box<VideoModel>(videoBox).values.isEmpty
+                      ? Recents(constraints)
+                      : DownloadStatusWidget();
+                },
+              ),
+            ),
             Expanded(child: ManualWidget())
           ],
         ),

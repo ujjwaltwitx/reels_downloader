@@ -22,13 +22,14 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
       fields[0] as String,
       fields[3] as String,
       fields[4] as String,
+      fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, VideoModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.thumbnailUrl)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
       ..writeByte(3)
       ..write(obj.ownerId)
       ..writeByte(4)
-      ..write(obj.ownerThumbnailUrl);
+      ..write(obj.ownerThumbnailUrl)
+      ..writeByte(5)
+      ..write(obj.videoPath);
   }
 
   @override

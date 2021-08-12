@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,8 @@ class DownloadServices extends ChangeNotifier {
   double downloadPerct = 0;
   bool isButtonDisabled = false;
 
+  int intentCount = 0;
+
   String copyValue = '';
   Future<void> getClipData() async {
     await Clipboard.getData(Clipboard.kTextPlain).then((value) {
@@ -53,6 +54,11 @@ class DownloadServices extends ChangeNotifier {
       }
     }
     return downloadPath += '/Download';
+  }
+
+  void getUrlFromOtherApp(String url) {
+    copyValue = url;
+    notifyListeners();
   }
 
   Future<void> downloadReels(String link, BuildContext context) async {
@@ -96,9 +102,6 @@ class DownloadServices extends ChangeNotifier {
 
       usermodelBox.add(UserModel(accountName, accountThumbnailUrl));
 
-      videomodelBox.add(VideoModel(videoId, videoUrl, videoThumbnailUrl,
-          accountName, accountThumbnailUrl));
-
       try {
         await dio
             .download(videoUrl, '${directory.path}/${videoId.toString()}.mp4',
@@ -106,6 +109,16 @@ class DownloadServices extends ChangeNotifier {
           downloadPerct = rec / total;
           notifyListeners();
         });
+
+        videomodelBox.add(
+          VideoModel(
+              videoId,
+              videoUrl,
+              videoThumbnailUrl,
+              accountName,
+              accountThumbnailUrl,
+              '${directory.path}/${videoId.toString()}.mp4'),
+        );
       } catch (e) {
         rethrow;
       } finally {
@@ -120,6 +133,9 @@ class DownloadServices extends ChangeNotifier {
       );
     } catch (e) {
       rethrow;
+    } finally {
+      isButtonDisabled = false;
+      notifyListeners();
     }
   }
 }
