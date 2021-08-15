@@ -12,7 +12,7 @@ class AdServices {
 
   static BannerAd createBannerAd() {
     final BannerAd ad = BannerAd(
-      size: AdSize.mediumRectangle,
+      size: AdSize.fullBanner,
       adUnitId: 'ca-app-pub-1332264183046401/9389328021',
       listener: const BannerAdListener(),
       request: const AdRequest(),

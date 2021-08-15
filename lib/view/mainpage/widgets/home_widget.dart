@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
 import 'package:reels_downloader/main.dart';
+import 'package:reels_downloader/model/ads/ad_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:reels_downloader/view/mainpage/widgets/download_status.dart';
 import 'package:reels_downloader/view/mainpage/widgets/recents.dart';
@@ -67,7 +69,7 @@ class HomeWidget extends ConsumerWidget {
                 Expanded(
                   child: MaterialButton(
                     splashColor: Colors.transparent,
-                    onPressed: () {},
+                    onPressed: () async {},
                     color: Colors.grey[200],
                     elevation: 0,
                     child: const Text('Paste Link',
@@ -83,32 +85,49 @@ class HomeWidget extends ConsumerWidget {
                     splashColor: Colors.transparent,
                     onPressed: downProvider.isButtonDisabled
                         ? null
-                        : () {
-                            DownloadServices.instance.downloadReels(
+                        : () async {
+                            await DownloadServices.instance.downloadReels(
                                 textController.text.toString(), context);
+                            AdServices.showRewardedAd();
                           },
                     color: Colors.pink,
                     elevation: 0,
-                    child: const Text(
-                      'Download',
-                      style: TextStyle(color: Colors.white),
+                    child: Text(
+                      !downProvider.isButtonDisabled
+                          ? 'Download'
+                          : 'Downloading',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(
-              height: constraints.maxHeight * 0.2,
-              child: ValueListenableBuilder(
-                valueListenable: Hive.box<VideoModel>(videoBox).listenable(),
-                builder: (context, Box<VideoModel> box, _) {
-                  return Hive.box<VideoModel>(videoBox).values.isEmpty
-                      ? Recents(constraints)
-                      : DownloadStatusWidget();
-                },
-              ),
+            ValueListenableBuilder(
+              valueListenable: Hive.box<VideoModel>(videoBox).listenable(),
+              builder: (context, Box<VideoModel> box, _) {
+                return Hive.box<VideoModel>(videoBox).values.isEmpty
+                    ? Expanded(child: ManualWidget())
+                    : Expanded(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: constraints.maxHeight * 0.2,
+                              child: DownloadStatusWidget(),
+                            ),
+                            SizedBox(
+                              height: constraints.maxHeight * 0.2,
+                              child: Recents(constraints),
+                            ),
+                            SizedBox(
+                              height: constraints.maxHeight * 0.25,
+                              child: AdWidget(
+                                  ad: AdServices.createBannerAd()..load()),
+                            )
+                          ],
+                        ),
+                      );
+              },
             ),
-            Expanded(child: ManualWidget())
           ],
         ),
       );

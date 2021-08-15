@@ -38,7 +38,9 @@ dependencies:
   receive_sharing_intent: ^1.4.5
   share: ^2.0.4
   video_player: ^2.1.12
+  fluttertoast: ^8.0.8
   open_file: 
+  image_gallery_saver: '^1.6.9'
 
 dev_dependencies:
   build_runner: ^2.1.0
@@ -50,7 +52,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: false
-  image_path: "assets/bitmap110.png"
+  image_path: "assets/appIcon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,6 +67,8 @@ flutter:
   assets:
     - assets/
     - assets/bitmap2.svg
+    - assets/empty.svg
+    - assets/appIcon.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

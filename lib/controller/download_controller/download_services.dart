@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:reels_downloader/main.dart';
@@ -29,16 +31,12 @@ class DownloadServices extends ChangeNotifier {
   int intentCount = 0;
 
   String copyValue = '';
-  Future<void> getClipData() async {
+  Future<String> getClipData() async {
     await Clipboard.getData(Clipboard.kTextPlain).then((value) {
-      if (value == null) {
-      } else {
-        if (value.text.split('/').contains('www.instagram.com')) {
-          copyValue = value.text;
-          notifyListeners();
-        }
+      if (value.text.split('/').contains('www.instagram.com')) {
+        return value.text;
       }
-      notifyListeners();
+      return '';
     });
   }
 
@@ -73,6 +71,10 @@ class DownloadServices extends ChangeNotifier {
       final videomodelBox = Hive.box<VideoModel>(videoBox);
       final Dio dio = Dio();
       final linkEdit = link.replaceAll(" ", "").split("/");
+
+      final String toSendLink =
+          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
+
       final downloadURL = await dio.get(
           '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}' +
               "/?__a=1");
@@ -102,6 +104,11 @@ class DownloadServices extends ChangeNotifier {
 
       usermodelBox.add(UserModel(accountName, accountThumbnailUrl));
 
+      videomodelBox.add(
+        VideoModel(videoId, toSendLink, videoThumbnailUrl, accountName,
+            accountThumbnailUrl, '${directory.path}/${videoId.toString()}.mp4'),
+      );
+
       try {
         await dio
             .download(videoUrl, '${directory.path}/${videoId.toString()}.mp4',
@@ -109,23 +116,17 @@ class DownloadServices extends ChangeNotifier {
           downloadPerct = rec / total;
           notifyListeners();
         });
+        Fluttertoast.showToast(
+            msg: "Download Complete", gravity: ToastGravity.BOTTOM);
 
-        videomodelBox.add(
-          VideoModel(
-              videoId,
-              videoUrl,
-              videoThumbnailUrl,
-              accountName,
-              accountThumbnailUrl,
-              '${directory.path}/${videoId.toString()}.mp4'),
-        );
+        await ImageGallerySaver.saveFile(
+            '${directory.path}/${videoId.toString()}.mp4');
       } catch (e) {
         rethrow;
       } finally {
         isButtonDisabled = false;
         notifyListeners();
       }
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Saved To Download Folder"),

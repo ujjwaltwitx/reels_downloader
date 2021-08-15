@@ -14,11 +14,11 @@ class Recents extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: constraints.maxHeight * 0.015,
+            height: constraints.maxHeight * 0.08,
           ),
           const Text("Recents"),
           SizedBox(
-            height: constraints.maxHeight * 0.08,
+            height: constraints.maxHeight * 0.05,
           ),
           Expanded(
             child: Container(

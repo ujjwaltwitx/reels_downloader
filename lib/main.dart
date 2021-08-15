@@ -4,29 +4,29 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:reels_downloader/model/ads/ad_model.dart';
 import 'package:reels_downloader/model/useraccounts/user_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
-// import 'package:permission_handler/permission_handler.dart';
 
 import 'controller/download_controller/download_services.dart';
-// import 'model/ads/ad_model.dart';
 import 'view/mainpage/page/mainpage.dart';
 
 // https://www.instagram.com/reel/CRgPdtWFw7H/?utm_medium=copy_link
-// https://www.instagram.com/reel/CR6PhUZDXt3/?utm_medium=share_sheet
+// https://www.instagram.com/reel/CRgjvHPCVD0/?utm_medium=share_sheet
 const String videoBox = 'videomodel';
 const String userBox = 'usermodel';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AdServices.initialize();
   final dir = await getApplicationDocumentsDirectory();
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(VideoModelAdapter());
   Hive.init(dir.path);
   await Hive.openBox<UserModel>(userBox);
   await Hive.openBox<VideoModel>(videoBox);
+  await AdServices.createRewardedAd();
   runApp(ProviderScope(child: LandingPage()));
-  // AdServices.initialize();
 }
 
 class LandingPage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
   // void dispose() {
   //   super.dispose();
   //   WidgetsBinding.instance.removeObserver(this);
-  // }
+  //  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
