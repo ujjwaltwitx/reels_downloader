@@ -18,8 +18,8 @@ const String userBox = 'usermodel';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AdServices.initialize();
   final dir = await getApplicationDocumentsDirectory();
+  AdServices.initialize();
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(VideoModelAdapter());
   Hive.init(dir.path);
@@ -34,28 +34,7 @@ class LandingPage extends StatefulWidget {
   _LandingPageState createState() => _LandingPageState();
 }
 
-class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   AdServices.createRewardedAd();
-  //   WidgetsBinding.instance.addObserver(this);
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   WidgetsBinding.instance.removeObserver(this);
-  //  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {}
-    if (state == AppLifecycleState.resumed) {
-      DownloadServices.instance.intentCount = 0;
-    }
-  }
-
+class _LandingPageState extends State<LandingPage> {
   Future<void> getPermission() async {
     if (await Permission.storage.isGranted) {
     } else {

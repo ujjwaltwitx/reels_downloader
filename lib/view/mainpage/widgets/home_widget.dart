@@ -21,7 +21,7 @@ class HomeWidget extends ConsumerWidget {
     if (downProvider.intentCount == 0) {
       ReceiveSharingIntent.getInitialText().then((String value) {
         downProvider.getUrlFromOtherApp(value);
-        if (downProvider.copyValue.isEmpty) {
+        if (downProvider.copyValue == null) {
         } else {
           textController.text = downProvider.copyValue;
         }
@@ -30,16 +30,16 @@ class HomeWidget extends ConsumerWidget {
       ReceiveSharingIntent.getTextStream().listen(
         (String data) {
           downProvider.getUrlFromOtherApp(data);
-          if (downProvider.copyValue.isEmpty) {
+          if (downProvider.copyValue == null) {
           } else {
             textController.text = downProvider.copyValue;
           }
         },
         cancelOnError: true,
       );
+    }
 
-      downProvider.intentCount++;
-    } else {}
+    downProvider.intentIncrement();
 
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
@@ -52,6 +52,8 @@ class HomeWidget extends ConsumerWidget {
               child: TextField(
                 controller: textController,
                 decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                   hintText: "Paste Instagram URL here....",
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -69,7 +71,12 @@ class HomeWidget extends ConsumerWidget {
                 Expanded(
                   child: MaterialButton(
                     splashColor: Colors.transparent,
-                    onPressed: () async {},
+                    onPressed: () async {
+                      downProvider.getClipData();
+                      if (downProvider.copyValue != null) {
+                        textController.text = downProvider.copyValue;
+                      }
+                    },
                     color: Colors.grey[200],
                     elevation: 0,
                     child: const Text('Paste Link',

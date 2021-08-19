@@ -24,7 +24,7 @@ class MainPage extends ConsumerWidget {
           child: ListView(
             children: <Widget>[
               SizedBox(
-                height: 200,
+                height: 180,
                 width: double.infinity,
                 child: Center(
                   child: SizedBox(
@@ -48,14 +48,14 @@ class MainPage extends ConsumerWidget {
                 ),
                 onTap: () {
                   Share.share(
-                      'https://play.google.com/store/apps/details?id=com.alphax.reels');
+                      'Download this light weight and ultra fast Instagram Reels Downloader and enjoy watching your favourite reels offline. Click the link to download now https://play.google.com/store/apps/details?id=com.alphax.reels');
                 },
               ),
               ListTile(
                 title: const Text('Privacy Policy'),
                 leading: const Icon(
                   Icons.policy,
-                  color: Colors.green,
+                  color: Colors.pink,
                 ),
                 onTap: () {
                   showDialog(
@@ -72,7 +72,7 @@ class MainPage extends ConsumerWidget {
                 title: const Text('Terms and Conditions'),
                 leading: const Icon(
                   Icons.privacy_tip,
-                  color: Colors.green,
+                  color: Colors.pink,
                 ),
                 onTap: () {
                   showDialog(
@@ -111,8 +111,7 @@ class MainPage extends ConsumerWidget {
                       IconButton(
                         onPressed: () {
                           Share.share(
-                              'Download this light weight and ultra fast Instagram Reels Downloader and enjoy watching your favourite reels offline. Click the link to download now ' +
-                                  'https://play.google.com/store/apps/details?id=com.alphax.reels');
+                              'Download this light weight and ultra fast Instagram Reels Downloader and enjoy watching your favourite reels offline. Click the link to download now https://play.google.com/store/apps/details?id=com.alphax.reels');
                         },
                         icon: const Icon(Icons.share),
                       ),

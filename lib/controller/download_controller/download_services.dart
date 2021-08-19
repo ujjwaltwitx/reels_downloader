@@ -29,14 +29,19 @@ class DownloadServices extends ChangeNotifier {
   bool isButtonDisabled = false;
 
   int intentCount = 0;
+  void intentIncrement() {
+    intentCount++;
+  }
 
   String copyValue = '';
-  Future<String> getClipData() async {
+  Future<void> getClipData() async {
     await Clipboard.getData(Clipboard.kTextPlain).then((value) {
       if (value.text.split('/').contains('www.instagram.com')) {
-        return value.text;
+        copyValue = value.text;
+      } else {
+        copyValue = '';
       }
-      return '';
+      notifyListeners();
     });
   }
 

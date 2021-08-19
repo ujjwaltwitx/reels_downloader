@@ -16,9 +16,52 @@ class ManualWidget extends StatelessWidget {
           ),
           Expanded(
             child: Container(
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
+              ),
+              child: ListView(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                        "1. Open Instagram > Go to reels > Click 'Share to'"),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(child: Image.asset('assets/1.png')),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child:
+                          Text("2. Choose 'Insta Reels Saver' from the list.")),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(child: Image.asset('assets/2.png')),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                        "3. Click 'Download' and wait for download to finish"),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(child: Image.asset('assets/3.png')),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
             ),
           ),
