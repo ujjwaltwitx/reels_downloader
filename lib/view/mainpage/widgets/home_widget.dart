@@ -87,8 +87,7 @@ class HomeWidget extends ConsumerWidget {
                         ? null
                         : () async {
                             await DownloadServices.instance.downloadReels(
-                                downProvider.textController.text.toString(),
-                                context);
+                                downProvider.textController.text.toString());
                             AdServices.showRewardedAd();
                           },
                     color: Colors.pink,

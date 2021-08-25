@@ -43,6 +43,7 @@ class DownloadServices extends ChangeNotifier {
       if (value.text.split('/').contains('www.instagram.com')) {
         if (textController.text.isEmpty) {
           textController.text = value.text;
+          downloadReels(textController.text);
         }
       }
       notifyListeners();
@@ -63,7 +64,7 @@ class DownloadServices extends ChangeNotifier {
     return downloadPath += '/Download';
   }
 
-  Future<void> downloadReels(String link, BuildContext context) async {
+  Future<void> downloadReels(String link) async {
     isButtonDisabled = true;
 
     notifyListeners();
@@ -100,11 +101,10 @@ class DownloadServices extends ChangeNotifier {
       if (File('${directory.path}/${videoId.toString()}.mp4').existsSync()) {
         isButtonDisabled = false;
         notifyListeners();
-        return ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Video already exists in Download folder"),
-          ),
-        );
+        Fluttertoast.showToast(
+            msg: "Video exists in Download folder",
+            gravity: ToastGravity.CENTER);
+        return;
       }
 
       showDownloads = true;
@@ -127,8 +127,6 @@ class DownloadServices extends ChangeNotifier {
           downloadPerct = rec / total;
           notifyListeners();
         });
-        Fluttertoast.showToast(
-            msg: "Download Complete", gravity: ToastGravity.BOTTOM);
 
         await ImageGallerySaver.saveFile(
             '${directory.path}/${videoId.toString()}.mp4');
@@ -138,11 +136,8 @@ class DownloadServices extends ChangeNotifier {
         isButtonDisabled = false;
         notifyListeners();
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Saved To Gallery"),
-        ),
-      );
+      Fluttertoast.showToast(
+          msg: "Downloaded to Gallery", gravity: ToastGravity.BOTTOM);
     } catch (e) {
       rethrow;
     } finally {

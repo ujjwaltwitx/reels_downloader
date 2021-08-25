@@ -39,7 +39,7 @@ class MainPage extends ConsumerWidget {
                       height: 90,
                       width: 90,
                       child: Image.asset(
-                        'assets/appIcon.png',
+                        'assets/logo2.png',
                       ),
                     ),
                   ),

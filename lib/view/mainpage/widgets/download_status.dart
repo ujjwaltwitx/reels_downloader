@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:open_file/open_file.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
 import 'package:reels_downloader/main.dart';
 import 'package:reels_downloader/model/useraccounts/user_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DownloadStatusWidget extends ConsumerWidget {
   @override
@@ -37,16 +39,35 @@ class DownloadStatusWidget extends ConsumerWidget {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          SizedBox(
-                            height: constraints.maxHeight * 1,
-                            width: constraints.maxWidth * 0.16,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                box.values.last.thumbnailUrl,
-                                fit: BoxFit.cover,
-                                isAntiAlias: true,
-                              ),
+                          GestureDetector(
+                            onTap: downloadProvider.isButtonDisabled
+                                ? null
+                                : () {
+                                    OpenFile.open(Hive.box<VideoModel>(videoBox)
+                                        .values
+                                        .last
+                                        .videoPath);
+                                  },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  height: constraints.maxHeight * 1,
+                                  width: constraints.maxWidth * 0.16,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      box.values.last.thumbnailUrl,
+                                      fit: BoxFit.cover,
+                                      isAntiAlias: true,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.play_arrow_rounded,
+                                  color: Colors.white,
+                                )
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -58,16 +79,22 @@ class DownloadStatusWidget extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  CircleAvatar(
-                                    radius: constraints.maxHeight * 0.34,
-                                    backgroundColor: Colors.white,
+                                  GestureDetector(
+                                    onTap: () {
+                                      launch(
+                                          'https://www.instagram.com/${Hive.box<UserModel>(userBox).values.last.usrname}/');
+                                    },
                                     child: CircleAvatar(
-                                      radius: constraints.maxHeight * 0.27,
-                                      backgroundImage: NetworkImage(
-                                        Hive.box<UserModel>(userBox)
-                                            .values
-                                            .last
-                                            .thumbnailUrl,
+                                      radius: constraints.maxHeight * 0.32,
+                                      backgroundColor: Colors.white,
+                                      child: CircleAvatar(
+                                        radius: constraints.maxHeight * 0.25,
+                                        backgroundImage: NetworkImage(
+                                          Hive.box<UserModel>(userBox)
+                                              .values
+                                              .last
+                                              .thumbnailUrl,
+                                        ),
                                       ),
                                     ),
                                   ),
