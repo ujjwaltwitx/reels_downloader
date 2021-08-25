@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
 import 'package:reels_downloader/main.dart';
+import 'package:reels_downloader/model/useraccounts/user_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 
 class DownloadStatusWidget extends ConsumerWidget {
@@ -53,39 +54,62 @@ class DownloadStatusWidget extends ConsumerWidget {
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text("Download Status"),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Stack(alignment: Alignment.centerLeft, children: [
-                                Container(
-                                  height: constraints.maxHeight * 0.22,
-                                  width: constraints.maxWidth * 0.8,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.grey[300],
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: constraints.maxHeight * 0.22,
-                                  width: constraints.maxWidth * 0.8,
-                                  child: FractionallySizedBox(
-                                    alignment: Alignment.centerLeft,
-                                    widthFactor: downloadProvider.downloadPerct,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.pink,
-                                        borderRadius: BorderRadius.circular(8),
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: constraints.maxHeight * 0.34,
+                                    backgroundColor: Colors.white,
+                                    child: CircleAvatar(
+                                      radius: constraints.maxHeight * 0.27,
+                                      backgroundImage: NetworkImage(
+                                        Hive.box<UserModel>(userBox)
+                                            .values
+                                            .last
+                                            .thumbnailUrl,
                                       ),
                                     ),
                                   ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    Hive.box<UserModel>(userBox)
+                                        .values
+                                        .last
+                                        .usrname,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                height: constraints.maxHeight * 0.22,
+                                width: constraints.maxWidth * 0.8,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.grey[300],
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ])
+                                child: FractionallySizedBox(
+                                  alignment: Alignment.centerLeft,
+                                  widthFactor: downloadProvider.downloadPerct,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(colors: [
+                                        Colors.pink,
+                                        Colors.red,
+                                        Colors.orange
+                                      ]),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              )
                             ],
                           )
                         ],

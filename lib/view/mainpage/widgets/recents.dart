@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:reels_downloader/main.dart';
 import 'package:reels_downloader/model/useraccounts/user_model.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class Recents extends ConsumerWidget {
   const Recents(this.constraints);
@@ -31,19 +34,31 @@ class Recents extends ConsumerWidget {
                   return Padding(
                     padding: const EdgeInsets.all(5),
                     child: ValueListenableBuilder(
-                        valueListenable:
-                            Hive.box<UserModel>(userBox).listenable(),
-                        builder: (context, Box<UserModel> usermodel, _) {
-                          return ListView.builder(
-                            itemBuilder: (_, index) {
+                      valueListenable:
+                          Hive.box<UserModel>(userBox).listenable(),
+                      builder: (context, Box<UserModel> usermodel, _) {
+                        return ListView.builder(
+                          itemBuilder: (_, index) {
+                            if (index < 10) {
                               return Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: GestureDetector(
-                                  onTap: () {},
-                                  child: CircleAvatar(
-                                    backgroundColor:
-                                        const Color.fromRGBO(240, 20, 140, 1),
-                                    radius: constraints.maxHeight * 0.35,
+                                  onTap: () async {
+                                    await url_launcher.launch(
+                                        'https://www.instagram.com/${usermodel.values.toList().reversed.elementAt(index).usrname}/');
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    height: constraints.maxHeight * 0.7,
+                                    width: constraints.maxHeight * 0.7,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: LinearGradient(colors: [
+                                        Colors.pink,
+                                        Colors.red,
+                                        Colors.orange
+                                      ]),
+                                    ),
                                     child: CircleAvatar(
                                       backgroundImage: NetworkImage(usermodel
                                           .values
@@ -57,11 +72,14 @@ class Recents extends ConsumerWidget {
                                   ),
                                 ),
                               );
-                            },
-                            itemCount: usermodel.length,
-                            scrollDirection: Axis.horizontal,
-                          );
-                        }),
+                            } else {}
+                            return null;
+                          },
+                          itemCount: usermodel.length,
+                          scrollDirection: Axis.horizontal,
+                        );
+                      },
+                    ),
                   );
                 },
               ),

@@ -5,16 +5,17 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:reels_downloader/model/ads/ad_model.dart';
+import 'package:reels_downloader/model/photo/photo_model.dart';
 import 'package:reels_downloader/model/useraccounts/user_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
-
-import 'controller/download_controller/download_services.dart';
 import 'view/mainpage/page/mainpage.dart';
 
-// https://www.instagram.com/reel/CRgPdtWFw7H/?utm_medium=copy_link
-// https://www.instagram.com/reel/CRgjvHPCVD0/?utm_medium=share_sheet
 const String videoBox = 'videomodel';
 const String userBox = 'usermodel';
+const String photoBox = 'photomodel';
+
+//https://www.instagram.com/p/CS7AkJfqC-v/?utm_source=ig_web_copy_link
+//https://www.instagram.com/reel/CS9fF8nKR_d/?utm_source=ig_web_copy_link
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ Future<void> main() async {
   AdServices.initialize();
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(VideoModelAdapter());
+  Hive.registerAdapter(PhotoModelAdapter());
   Hive.init(dir.path);
   await Hive.openBox<UserModel>(userBox);
   await Hive.openBox<VideoModel>(videoBox);
@@ -45,7 +47,6 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     getPermission();
-    DownloadServices.instance.getClipData();
     return MediaQuery(
       data: const MediaQueryData(),
       child: MaterialApp(

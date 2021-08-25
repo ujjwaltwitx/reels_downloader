@@ -12,34 +12,31 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'manula_widget.dart';
 
 class HomeWidget extends ConsumerWidget {
-  final textController = TextEditingController();
-
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final downProvider = watch(downloadNotifier);
 
-    if (downProvider.intentCount == 0) {
+    if (downProvider.receiveIntent == true) {
+      downProvider.toggleIntent();
+
       ReceiveSharingIntent.getInitialText().then((String value) {
-        downProvider.getUrlFromOtherApp(value);
-        if (downProvider.copyValue == null) {
-        } else {
-          textController.text = downProvider.copyValue;
+        if (downProvider.textController.text.isEmpty) {
+          downProvider.changeTextContData(value);
         }
       });
 
-      ReceiveSharingIntent.getTextStream().listen(
-        (String data) {
-          downProvider.getUrlFromOtherApp(data);
-          if (downProvider.copyValue == null) {
-          } else {
-            textController.text = downProvider.copyValue;
-          }
-        },
-        cancelOnError: true,
-      );
-    }
+      downProvider.getClipData();
 
-    downProvider.intentIncrement();
+      // ReceiveSharingIntent.getTextStream().listen(
+      //   (String value) {
+      //     if (downProvider.textController.text.isEmpty) {
+      //       downProvider.changeTextContData(value);
+      //     }
+      //   },
+      //   cancelOnError: true,
+      // );
+
+    }
 
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
@@ -50,7 +47,7 @@ class HomeWidget extends ConsumerWidget {
             SizedBox(
               height: constraints.maxHeight * 0.1,
               child: TextField(
-                controller: textController,
+                controller: downProvider.textController,
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -63,24 +60,20 @@ class HomeWidget extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
             Row(
               children: [
                 Expanded(
                   child: MaterialButton(
                     splashColor: Colors.transparent,
-                    onPressed: () async {
+                    onPressed: () {
                       downProvider.getClipData();
-                      if (downProvider.copyValue != null) {
-                        textController.text = downProvider.copyValue;
-                      }
                     },
                     color: Colors.grey[200],
                     elevation: 0,
-                    child: const Text('Paste Link',
-                        style: TextStyle(color: Colors.pink)),
+                    child: const Text(
+                      'Paste Link',
+                      style: TextStyle(color: Colors.pink),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -94,7 +87,8 @@ class HomeWidget extends ConsumerWidget {
                         ? null
                         : () async {
                             await DownloadServices.instance.downloadReels(
-                                textController.text.toString(), context);
+                                downProvider.textController.text.toString(),
+                                context);
                             AdServices.showRewardedAd();
                           },
                     color: Colors.pink,
@@ -117,10 +111,11 @@ class HomeWidget extends ConsumerWidget {
                     : Expanded(
                         child: Column(
                           children: [
-                            SizedBox(
-                              height: constraints.maxHeight * 0.2,
-                              child: DownloadStatusWidget(),
-                            ),
+                            if (downProvider.showDownloads)
+                              SizedBox(
+                                height: constraints.maxHeight * 0.2,
+                                child: DownloadStatusWidget(),
+                              ),
                             SizedBox(
                               height: constraints.maxHeight * 0.2,
                               child: Recents(constraints),
