@@ -27,6 +27,7 @@ Future<void> main() async {
   Hive.init(dir.path);
   await Hive.openBox<UserModel>(userBox);
   await Hive.openBox<VideoModel>(videoBox);
+  await Hive.openBox<PhotoModel>(photoBox);
   await AdServices.createRewardedAd();
   runApp(ProviderScope(child: LandingPage()));
 }

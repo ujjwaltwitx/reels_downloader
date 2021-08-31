@@ -29,6 +29,7 @@ class DownloadServices extends ChangeNotifier {
   double downloadPerct = 0;
   bool isButtonDisabled = false;
 
+//Remove the constant
   void changeTextContData(String text) {
     textController.text = text;
     notifyListeners();
@@ -43,7 +44,18 @@ class DownloadServices extends ChangeNotifier {
       if (value.text.split('/').contains('www.instagram.com')) {
         if (textController.text.isEmpty) {
           textController.text = value.text;
-          downloadReels(textController.text);
+          if (value.text.split('/').contains('reel') ||
+              value.text.split('/').contains('tv')) {
+            downloadReels(textController.text);
+          } else if (DownloadServices.instance.textController.text
+              .split('/')
+              .contains('p')) {
+            DownloadServices.instance
+                .downloadPhotos(DownloadServices.instance.textController.text);
+          } else {
+            Fluttertoast.showToast(
+                msg: "Link not supported", gravity: ToastGravity.CENTER);
+          }
         }
       }
       notifyListeners();
@@ -128,8 +140,8 @@ class DownloadServices extends ChangeNotifier {
           notifyListeners();
         });
 
-        await ImageGallerySaver.saveFile(
-            '${directory.path}/${videoId.toString()}.mp4');
+        // await ImageGallerySaver.saveFile(
+        //     '${directory.path}/${videoId.toString()}.mp4');
       } catch (e) {
         rethrow;
       } finally {
@@ -137,7 +149,7 @@ class DownloadServices extends ChangeNotifier {
         notifyListeners();
       }
       Fluttertoast.showToast(
-          msg: "Downloaded to Gallery", gravity: ToastGravity.BOTTOM);
+          msg: "Video Downloaded to Gallery", gravity: ToastGravity.BOTTOM);
     } catch (e) {
       rethrow;
     } finally {
@@ -146,7 +158,9 @@ class DownloadServices extends ChangeNotifier {
     }
   }
 
-  Future<void> downloadPhotos(String link, BuildContext context) async {
+  Future<void> downloadPhotos(
+    String link,
+  ) async {
     isButtonDisabled = true;
     notifyListeners();
     try {
@@ -175,39 +189,30 @@ class DownloadServices extends ChangeNotifier {
       if (File('${directory.path}/${photoID.toString()}.jpg').existsSync()) {
         isButtonDisabled = false;
         notifyListeners();
-        return ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Video already exists in Download folder"),
-          ),
-        );
+        return Fluttertoast.showToast(
+            msg: "Photo already exists in Download folder",
+            gravity: ToastGravity.BOTTOM);
       }
 
       photomodelBox.add(PhotoModel(photoID, photoUrl, toSendLink,
           '${directory.path}/${photoID.toString()}.jpg'));
 
       try {
-        await dio
-            .download(photoUrl, '${directory.path}/${photoID.toString()}.jpg',
-                onReceiveProgress: (rec, total) {
-          downloadPerct = rec / total;
-          notifyListeners();
-        });
-        Fluttertoast.showToast(
-            msg: "Download Complete", gravity: ToastGravity.BOTTOM);
+        await dio.download(
+          photoUrl,
+          '${directory.path}/${photoID.toString()}.jpg',
+        );
 
-        await ImageGallerySaver.saveFile(
-            '${directory.path}/${photoID.toString()}.jpg');
+        // await ImageGallerySaver.saveFile(
+        //     '${directory.path}/${photoID.toString()}.jpg');
       } catch (e) {
         rethrow;
       } finally {
         isButtonDisabled = false;
         notifyListeners();
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Saved To Gallery"),
-        ),
-      );
+      Fluttertoast.showToast(
+          msg: "Image Downloaded to Gallery", gravity: ToastGravity.BOTTOM);
     } catch (e) {
       rethrow;
     } finally {

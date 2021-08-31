@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
@@ -22,20 +23,27 @@ class HomeWidget extends ConsumerWidget {
       ReceiveSharingIntent.getInitialText().then((String value) {
         if (downProvider.textController.text.isEmpty) {
           downProvider.changeTextContData(value);
+          if (DownloadServices.instance.textController.text
+                  .split('/')
+                  .contains('reel') ||
+              DownloadServices.instance.textController.text
+                  .split('/')
+                  .contains('tv')) {
+            DownloadServices.instance
+                .downloadReels(DownloadServices.instance.textController.text);
+          } else if (DownloadServices.instance.textController.text
+              .split('/')
+              .contains('p')) {
+            DownloadServices.instance
+                .downloadPhotos(DownloadServices.instance.textController.text);
+          } else {
+            Fluttertoast.showToast(
+                msg: "Link not supported", gravity: ToastGravity.CENTER);
+          }
         }
       });
 
       downProvider.getClipData();
-
-      // ReceiveSharingIntent.getTextStream().listen(
-      //   (String value) {
-      //     if (downProvider.textController.text.isEmpty) {
-      //       downProvider.changeTextContData(value);
-      //     }
-      //   },
-      //   cancelOnError: true,
-      // );
-
     }
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -66,7 +74,10 @@ class HomeWidget extends ConsumerWidget {
                   child: MaterialButton(
                     splashColor: Colors.transparent,
                     onPressed: () {
+                      DownloadServices.instance.textController.text = '';
                       downProvider.getClipData();
+                      Fluttertoast.showToast(
+                          msg: "Link Pasted", gravity: ToastGravity.CENTER);
                     },
                     color: Colors.grey[200],
                     elevation: 0,
@@ -86,8 +97,28 @@ class HomeWidget extends ConsumerWidget {
                     onPressed: downProvider.isButtonDisabled
                         ? null
                         : () async {
-                            await DownloadServices.instance.downloadReels(
-                                downProvider.textController.text.toString());
+                            if (DownloadServices.instance.textController.text
+                                    .split('/')
+                                    .contains('reel') ||
+                                DownloadServices.instance.textController.text
+                                    .split('/')
+                                    .contains('tv')) {
+                              DownloadServices.instance.downloadReels(
+                                  DownloadServices
+                                      .instance.textController.text);
+                            } else if (DownloadServices
+                                .instance.textController.text
+                                .split('/')
+                                .contains('p')) {
+                              DownloadServices.instance.downloadPhotos(
+                                  DownloadServices
+                                      .instance.textController.text);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Link not supported",
+                                  gravity: ToastGravity.CENTER);
+                            }
+
                             AdServices.showRewardedAd();
                           },
                     color: Colors.pink,
