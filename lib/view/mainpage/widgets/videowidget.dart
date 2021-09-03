@@ -116,6 +116,22 @@ class VideoWidget extends ConsumerWidget {
                                   children: [
                                     IconButton(
                                       splashRadius: 2,
+                                      onPressed: () async {
+                                        final file = File(videoListReversed
+                                            .elementAt(index)
+                                            .videoPath);
+
+                                        box.deleteAt(
+                                            box.values.length - index - 1);
+                                        await file.delete();
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red[400],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      splashRadius: 2,
                                       onPressed: () {
                                         Clipboard.setData(
                                           ClipboardData(
@@ -149,22 +165,6 @@ class VideoWidget extends ConsumerWidget {
                                       icon: const Icon(
                                         Icons.share,
                                         color: Colors.white,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      splashRadius: 2,
-                                      onPressed: () async {
-                                        final file = File(videoListReversed
-                                            .elementAt(index)
-                                            .videoPath);
-
-                                        box.deleteAt(
-                                            box.values.length - index - 1);
-                                        await file.delete();
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red[400],
                                       ),
                                     ),
                                   ],

@@ -10,6 +10,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:reels_downloader/main.dart';
+import 'package:reels_downloader/model/ads/ad_model.dart';
 import 'package:reels_downloader/model/photo/photo_model.dart';
 import 'package:reels_downloader/model/useraccounts/user_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
@@ -28,8 +29,7 @@ class DownloadServices extends ChangeNotifier {
   bool receiveIntent = true;
   double downloadPerct = 0;
   bool isButtonDisabled = false;
-
-//Remove the constant
+  final ad = AdServices.createBannerAd()..load();
   void changeTextContData(String text) {
     textController.text = text;
     notifyListeners();
@@ -44,21 +44,18 @@ class DownloadServices extends ChangeNotifier {
       if (value.text.split('/').contains('www.instagram.com')) {
         if (textController.text.isEmpty) {
           textController.text = value.text;
+          notifyListeners();
           if (value.text.split('/').contains('reel') ||
               value.text.split('/').contains('tv')) {
             downloadReels(textController.text);
-          } else if (DownloadServices.instance.textController.text
-              .split('/')
-              .contains('p')) {
-            DownloadServices.instance
-                .downloadPhotos(DownloadServices.instance.textController.text);
+          } else if (textController.text.split('/').contains('p')) {
+            downloadPhotos(textController.text);
           } else {
             Fluttertoast.showToast(
                 msg: "Link not supported", gravity: ToastGravity.CENTER);
           }
         }
       }
-      notifyListeners();
     });
   }
 
@@ -88,6 +85,7 @@ class DownloadServices extends ChangeNotifier {
       final usermodelBox = Hive.box<UserModel>(userBox);
       final videomodelBox = Hive.box<VideoModel>(videoBox);
       final Dio dio = Dio();
+      link.trimRight();
       final linkEdit = link.replaceAll(" ", "").split("/");
 
       final String toSendLink =
@@ -140,8 +138,8 @@ class DownloadServices extends ChangeNotifier {
           notifyListeners();
         });
 
-        // await ImageGallerySaver.saveFile(
-        //     '${directory.path}/${videoId.toString()}.mp4');
+        await ImageGallerySaver.saveFile(
+            '${directory.path}/${videoId.toString()}.mp4');
       } catch (e) {
         rethrow;
       } finally {
@@ -158,9 +156,7 @@ class DownloadServices extends ChangeNotifier {
     }
   }
 
-  Future<void> downloadPhotos(
-    String link,
-  ) async {
+  Future<void> downloadPhotos(String link) async {
     isButtonDisabled = true;
     notifyListeners();
     try {
@@ -203,8 +199,8 @@ class DownloadServices extends ChangeNotifier {
           '${directory.path}/${photoID.toString()}.jpg',
         );
 
-        // await ImageGallerySaver.saveFile(
-        //     '${directory.path}/${photoID.toString()}.jpg');
+        await ImageGallerySaver.saveFile(
+            '${directory.path}/${photoID.toString()}.jpg');
       } catch (e) {
         rethrow;
       } finally {

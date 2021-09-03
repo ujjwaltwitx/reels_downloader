@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -16,9 +17,11 @@ const String photoBox = 'photomodel';
 
 //https://www.instagram.com/p/CS7AkJfqC-v/?utm_source=ig_web_copy_link
 //https://www.instagram.com/reel/CS9fF8nKR_d/?utm_source=ig_web_copy_link
+//https://www.instagram.com/reel/CStvM80DsDc/?utm_medium=copy_link
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   final dir = await getApplicationDocumentsDirectory();
   AdServices.initialize();
   Hive.registerAdapter(UserModelAdapter());
@@ -28,7 +31,7 @@ Future<void> main() async {
   await Hive.openBox<UserModel>(userBox);
   await Hive.openBox<VideoModel>(videoBox);
   await Hive.openBox<PhotoModel>(photoBox);
-  await AdServices.createRewardedAd();
+  // await AdServices.createRewardedAd();
   runApp(ProviderScope(child: LandingPage()));
 }
 
@@ -48,12 +51,9 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     getPermission();
-    return MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: MainPage(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MainPage(),
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
 import 'package:reels_downloader/main.dart';
-import 'package:reels_downloader/model/ads/ad_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:reels_downloader/view/mainpage/widgets/download_status.dart';
 import 'package:reels_downloader/view/mainpage/widgets/recents.dart';
@@ -19,30 +18,13 @@ class HomeWidget extends ConsumerWidget {
 
     if (downProvider.receiveIntent == true) {
       downProvider.toggleIntent();
-
       ReceiveSharingIntent.getInitialText().then((String value) {
-        if (downProvider.textController.text.isEmpty) {
+        if (value != null) {
+          print(value);
+          value = "https://${value.split("//").elementAt(1)}";
           downProvider.changeTextContData(value);
-          if (DownloadServices.instance.textController.text
-                  .split('/')
-                  .contains('reel') ||
-              DownloadServices.instance.textController.text
-                  .split('/')
-                  .contains('tv')) {
-            DownloadServices.instance
-                .downloadReels(DownloadServices.instance.textController.text);
-          } else if (DownloadServices.instance.textController.text
-              .split('/')
-              .contains('p')) {
-            DownloadServices.instance
-                .downloadPhotos(DownloadServices.instance.textController.text);
-          } else {
-            Fluttertoast.showToast(
-                msg: "Link not supported", gravity: ToastGravity.CENTER);
-          }
         }
       });
-
       downProvider.getClipData();
     }
 
@@ -59,7 +41,7 @@ class HomeWidget extends ConsumerWidget {
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                  hintText: "Paste Instagram URL here....",
+                  hintText: "Paste Instagram Photo or Reel URL here...",
                   filled: true,
                   fillColor: Colors.grey[200],
                   border: OutlineInputBorder(
@@ -76,8 +58,17 @@ class HomeWidget extends ConsumerWidget {
                     onPressed: () {
                       DownloadServices.instance.textController.text = '';
                       downProvider.getClipData();
-                      Fluttertoast.showToast(
-                          msg: "Link Pasted", gravity: ToastGravity.CENTER);
+                      if (downProvider.textController.text.isNotEmpty) {
+                        Fluttertoast.showToast(
+                          msg: "Link Pasted & Downloading",
+                          gravity: ToastGravity.CENTER,
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "No instagram links to paste",
+                          gravity: ToastGravity.CENTER,
+                        );
+                      }
                     },
                     color: Colors.grey[200],
                     elevation: 0,
@@ -119,7 +110,7 @@ class HomeWidget extends ConsumerWidget {
                                   gravity: ToastGravity.CENTER);
                             }
 
-                            AdServices.showRewardedAd();
+                            // AdServices.showRewardedAd();
                           },
                     color: Colors.pink,
                     elevation: 0,
@@ -152,8 +143,7 @@ class HomeWidget extends ConsumerWidget {
                             ),
                             SizedBox(
                               height: constraints.maxHeight * 0.25,
-                              child: AdWidget(
-                                  ad: AdServices.createBannerAd()..load()),
+                              child: AdWidget(ad: downProvider.ad),
                             )
                           ],
                         ),

@@ -115,7 +115,7 @@ class MainPage extends ConsumerWidget {
                             icon: const Icon(Icons.menu),
                           );
                         }),
-                        const Text("Insta Reels Downloader"),
+                        const Text("Instagram Video Downloader"),
                         IconButton(
                           onPressed: () {
                             Share.share(
