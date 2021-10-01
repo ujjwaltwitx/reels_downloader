@@ -12,7 +12,7 @@ import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class VideoWidget extends ConsumerWidget {
+class VideoScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     return ValueListenableBuilder(
@@ -20,6 +20,7 @@ class VideoWidget extends ConsumerWidget {
       builder: (context, Box<VideoModel> box, _) {
         return LayoutBuilder(
           builder: (context, constraints) {
+            final videoListReversed = box.values.toList().reversed;
             if (box.isEmpty) {
               return Center(
                 child: SvgPicture.asset(
@@ -27,10 +28,8 @@ class VideoWidget extends ConsumerWidget {
                 ),
               );
             }
-
             return ListView.builder(
               itemBuilder: (context, index) {
-                final videoListReversed = box.values.toList().reversed;
                 if (videoListReversed.elementAt(index) == null) {
                   return null;
                 } else {
@@ -40,7 +39,19 @@ class VideoWidget extends ConsumerWidget {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.black,
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2), //color of shadow
+                          spreadRadius: 3, //spread radius
+                          blurRadius: 7, // blur radius
+                          offset:
+                              const Offset(0, 2), // changes position of shadow
+                          //first paramerter of offset is left-right
+                          //second parameter is top to down
+                        ),
+                        //you can set more BoxShadow() here
+                      ],
                     ),
                     child: LayoutBuilder(
                       builder: (context, constraints) {
@@ -57,7 +68,7 @@ class VideoWidget extends ConsumerWidget {
                                     height: constraints.maxHeight * 0.08,
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white,
+                                      color: Colors.black12,
                                     ),
                                     child: GestureDetector(
                                       onTap: () {
@@ -77,7 +88,8 @@ class VideoWidget extends ConsumerWidget {
                                   ),
                                   Text(
                                     videoListReversed.elementAt(index).ownerId,
-                                    style: const TextStyle(color: Colors.white),
+                                    style:
+                                        const TextStyle(color: Colors.black87),
                                   )
                                 ],
                               ),
@@ -85,10 +97,12 @@ class VideoWidget extends ConsumerWidget {
                                 SizedBox(
                                   height: constraints.maxHeight * 0.8,
                                   width: double.infinity,
-                                  child: Image.network(
-                                    videoListReversed
-                                        .elementAt(index)
-                                        .thumbnailUrl,
+                                  child: Image.file(
+                                    File(
+                                      videoListReversed
+                                          .elementAt(index)
+                                          .thumbnailPath,
+                                    ),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -125,9 +139,9 @@ class VideoWidget extends ConsumerWidget {
                                             box.values.length - index - 1);
                                         await file.delete();
                                       },
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.delete,
-                                        color: Colors.red[400],
+                                        color: Colors.black54,
                                       ),
                                     ),
                                     IconButton(
@@ -150,7 +164,7 @@ class VideoWidget extends ConsumerWidget {
                                       },
                                       icon: const Icon(
                                         Icons.copy,
-                                        color: Colors.white,
+                                        color: Colors.black54,
                                       ),
                                     ),
                                     IconButton(
@@ -164,7 +178,7 @@ class VideoWidget extends ConsumerWidget {
                                       },
                                       icon: const Icon(
                                         Icons.share,
-                                        color: Colors.white,
+                                        color: Colors.black54,
                                       ),
                                     ),
                                   ],
@@ -184,6 +198,5 @@ class VideoWidget extends ConsumerWidget {
         );
       },
     );
-    ;
   }
 }

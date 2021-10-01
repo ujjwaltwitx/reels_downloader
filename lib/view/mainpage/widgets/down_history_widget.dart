@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reels_downloader/view/mainpage/widgets/photowidget.dart';
-import 'package:reels_downloader/view/mainpage/widgets/videowidget.dart';
-import 'package:share/share.dart';
+import 'package:reels_downloader/view/mainpage/widgets/photoscreen.dart';
+import 'package:reels_downloader/view/mainpage/widgets/videoscreen.dart';
 
 class DownloadWidget extends StatelessWidget {
-  void onShare(String path) {
-    Share.share(path);
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -32,8 +27,8 @@ class DownloadWidget extends StatelessWidget {
                   height: constraints.maxHeight * 0.95,
                   child: TabBarView(
                     children: [
-                      VideoWidget(),
-                      PhotoWidget(),
+                      VideoScreen(),
+                      PhotoScreen(),
                     ],
                   ),
                 ),

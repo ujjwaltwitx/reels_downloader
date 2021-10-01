@@ -5,8 +5,8 @@ import 'package:reels_downloader/main.dart';
 import 'package:reels_downloader/model/useraccounts/user_model.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
-class Recents extends ConsumerWidget {
-  const Recents(this.constraints);
+class RecentUserWidget extends ConsumerWidget {
+  const RecentUserWidget(this.constraints);
   final BoxConstraints constraints;
   @override
   Widget build(BuildContext context, ScopedReader watch) {

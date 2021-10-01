@@ -17,11 +17,7 @@ class DownloadStatusWidget extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: constraints.maxHeight * 0.08,
-          ),
-          const Text("Download Status"),
-          SizedBox(
-            height: constraints.maxHeight * 0.05,
+            height: constraints.maxHeight * 0.15,
           ),
           Expanded(
             child: Container(
@@ -85,10 +81,10 @@ class DownloadStatusWidget extends ConsumerWidget {
                                           'https://www.instagram.com/${Hive.box<UserModel>(userBox).values.last.usrname}/');
                                     },
                                     child: CircleAvatar(
-                                      radius: constraints.maxHeight * 0.32,
+                                      radius: constraints.maxHeight * 0.28,
                                       backgroundColor: Colors.white,
                                       child: CircleAvatar(
-                                        radius: constraints.maxHeight * 0.25,
+                                        radius: constraints.maxHeight * 0.22,
                                         backgroundImage: NetworkImage(
                                           Hive.box<UserModel>(userBox)
                                               .values
@@ -106,14 +102,27 @@ class DownloadStatusWidget extends ConsumerWidget {
                                         .values
                                         .last
                                         .usrname,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   )
                                 ],
                               ),
-                              const SizedBox(
-                                height: 5,
+                              SizedBox(
+                                width: constraints.maxWidth * 0.78,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "${(downloadProvider.downloadPerct * 100).toStringAsFixed(0)}%",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                               Container(
-                                height: constraints.maxHeight * 0.22,
+                                margin: const EdgeInsets.only(top: 5),
+                                height: constraints.maxHeight * 0.15,
                                 width: constraints.maxWidth * 0.8,
                                 decoration: BoxDecoration(
                                   color: Colors.white,

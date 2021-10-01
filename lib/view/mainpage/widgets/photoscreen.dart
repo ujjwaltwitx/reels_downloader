@@ -11,7 +11,7 @@ import 'package:share/share.dart';
 
 import '../../../main.dart';
 
-class PhotoWidget extends StatelessWidget {
+class PhotoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +27,6 @@ class PhotoWidget extends StatelessWidget {
                   ),
                 );
               }
-
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final photoListReversed = box.values.toList().reversed;
@@ -40,7 +39,20 @@ class PhotoWidget extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Colors.black,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Colors.grey.withOpacity(0.2), //color of shadow
+                            spreadRadius: 3, //spread radius
+                            blurRadius: 7, // blur radius
+                            offset: const Offset(
+                                0, 2), // changes position of shadow
+                            //first paramerter of offset is left-right
+                            //second parameter is top to down
+                          ),
+                          //you can set more BoxShadow() here
+                        ],
                       ),
                       child: LayoutBuilder(
                         builder: (context, constraints) {
@@ -49,38 +61,6 @@ class PhotoWidget extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Row(
-                                //   children: [
-                                //     Container(
-                                //       margin: const EdgeInsets.all(8),
-                                //       padding: const EdgeInsets.all(5),
-                                //       height: constraints.maxHeight * 0.08,
-                                //       decoration: const BoxDecoration(
-                                //         shape: BoxShape.circle,
-                                //         color: Colors.white,
-                                //       ),
-                                //       child: GestureDetector(
-                                //         onTap: () {
-                                //           launch(
-                                //             "https://www.instagram.com/${photoListReversed.elementAt(index).ownerId}",
-                                //           );
-                                //         },
-                                //         child: CircleAvatar(
-                                //           backgroundImage: NetworkImage(
-                                //             photoListReversed
-                                //                 .elementAt(index)
-                                //                 .ownerThumbnailUrl,
-                                //           ),
-                                //           radius: constraints.maxHeight * 0.03,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //     Text(
-                                //       photoListReversed.elementAt(index).ownerId,
-                                //       style: const TextStyle(color: Colors.white),
-                                //     )
-                                //   ],
-                                // ),
                                 GestureDetector(
                                   onTap: () {
                                     OpenFile.open(
@@ -92,10 +72,12 @@ class PhotoWidget extends StatelessWidget {
                                   child: SizedBox(
                                     height: constraints.maxHeight * 0.92,
                                     width: double.infinity,
-                                    child: Image.network(
-                                      photoListReversed
-                                          .elementAt(index)
-                                          .photoUrl,
+                                    child: Image.file(
+                                      File(
+                                        photoListReversed
+                                            .elementAt(index)
+                                            .photoPath,
+                                      ),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -116,9 +98,9 @@ class PhotoWidget extends StatelessWidget {
                                               box.values.length - index - 1);
                                           await file.delete();
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
-                                          color: Colors.red[400],
+                                          color: Colors.black54,
                                         ),
                                       ),
                                       IconButton(
@@ -141,7 +123,7 @@ class PhotoWidget extends StatelessWidget {
                                         },
                                         icon: const Icon(
                                           Icons.copy,
-                                          color: Colors.white,
+                                          color: Colors.black54,
                                         ),
                                       ),
                                       IconButton(
@@ -155,7 +137,7 @@ class PhotoWidget extends StatelessWidget {
                                         },
                                         icon: const Icon(
                                           Icons.share,
-                                          color: Colors.white,
+                                          color: Colors.black54,
                                         ),
                                       ),
                                     ],

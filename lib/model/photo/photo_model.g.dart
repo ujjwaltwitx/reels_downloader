@@ -17,24 +17,21 @@ class PhotoModelAdapter extends TypeAdapter<PhotoModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PhotoModel(
-      fields[1] as String,
       fields[0] as String,
-      fields[3] as String,
       fields[2] as String,
+      fields[1] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PhotoModel obj) {
     writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.photoUrl)
-      ..writeByte(1)
-      ..write(obj.photoId)
-      ..writeByte(2)
-      ..write(obj.photoPath)
       ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.photoId)
+      ..writeByte(1)
+      ..write(obj.photoPath)
+      ..writeByte(2)
       ..write(obj.toSendLink);
   }
 

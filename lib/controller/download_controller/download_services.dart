@@ -29,7 +29,9 @@ class DownloadServices extends ChangeNotifier {
   bool receiveIntent = true;
   double downloadPerct = 0;
   bool isButtonDisabled = false;
+
   final ad = AdServices.createBannerAd()..load();
+
   void changeTextContData(String text) {
     textController.text = text;
     notifyListeners();
@@ -42,18 +44,10 @@ class DownloadServices extends ChangeNotifier {
   Future<void> getClipData() async {
     await Clipboard.getData(Clipboard.kTextPlain).then((value) {
       if (value.text.split('/').contains('www.instagram.com')) {
-        if (textController.text.isEmpty) {
-          textController.text = value.text;
+        if (textController.text != null) {
+          changeTextContData(value.text);
+          mediaToDownload();
           notifyListeners();
-          if (value.text.split('/').contains('reel') ||
-              value.text.split('/').contains('tv')) {
-            downloadReels(textController.text);
-          } else if (textController.text.split('/').contains('p')) {
-            downloadPhotos(textController.text);
-          } else {
-            Fluttertoast.showToast(
-                msg: "Link not supported", gravity: ToastGravity.CENTER);
-          }
         }
       }
     });
@@ -73,9 +67,12 @@ class DownloadServices extends ChangeNotifier {
     return downloadPath += '/Download';
   }
 
+  bool fileExistsOrNot(String path) {
+    return File(path).existsSync();
+  }
+
   Future<void> downloadReels(String link) async {
     isButtonDisabled = true;
-
     notifyListeners();
     try {
       if (await Permission.storage.isGranted) {
@@ -85,15 +82,25 @@ class DownloadServices extends ChangeNotifier {
       final usermodelBox = Hive.box<UserModel>(userBox);
       final videomodelBox = Hive.box<VideoModel>(videoBox);
       final Dio dio = Dio();
-      link.trimRight();
       final linkEdit = link.replaceAll(" ", "").split("/");
-
       final String toSendLink =
           '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
 
-      final jsonFetchData = await dio.get(
-          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}' +
-              "/?__a=1");
+      final String tempDir = await getDir();
+      final Directory directory = Directory(tempDir);
+      final String filePath = '${directory.path}/${linkEdit[4]}.mp4';
+
+      if (fileExistsOrNot(filePath)) {
+        Fluttertoast.showToast(
+          msg: "Video exists in Download folder",
+          gravity: ToastGravity.CENTER,
+        );
+        return;
+      } else {}
+
+      final jsonFetchData = await dio.get(toSendLink,
+          options: Options(headers: {'User-Agent': 'Mozilla'}));
+
       final videoUrl = jsonFetchData.data['graphql']["shortcode_media"]
           ['video_url'] as String;
       final videoId =
@@ -105,49 +112,47 @@ class DownloadServices extends ChangeNotifier {
       final accountName = jsonFetchData.data['graphql']["shortcode_media"]
           ['owner']['username'] as String;
 
-      final String tempDir = await getDir();
-      final directory = Directory(tempDir);
-
-      if (File('${directory.path}/${videoId.toString()}.mp4').existsSync()) {
-        isButtonDisabled = false;
-        notifyListeners();
-        Fluttertoast.showToast(
-            msg: "Video exists in Download folder",
-            gravity: ToastGravity.CENTER);
-        return;
-      }
-
       showDownloads = true;
 
-      if (usermodelBox.values
-          .contains(UserModel(accountName, accountThumbnailUrl))) {
+      //download the thumbnail of the reel
+      final appDir = await getApplicationDocumentsDirectory();
+      final thumbnailDir = '${appDir.path}/${linkEdit[4]}.jpg';
+
+      if (fileExistsOrNot(thumbnailDir)) {
       } else {
-        usermodelBox.add(UserModel(accountName, accountThumbnailUrl));
+        try {
+          await dio.download(
+            videoThumbnailUrl,
+            thumbnailDir,
+          );
+        } catch (e) {
+          rethrow;
+        }
       }
 
+      usermodelBox.add(UserModel(accountName, accountThumbnailUrl));
       videomodelBox.add(
         VideoModel(videoId, toSendLink, videoThumbnailUrl, accountName,
-            accountThumbnailUrl, '${directory.path}/${videoId.toString()}.mp4'),
+            accountThumbnailUrl, filePath, thumbnailDir),
       );
 
       try {
-        await dio
-            .download(videoUrl, '${directory.path}/${videoId.toString()}.mp4',
-                onReceiveProgress: (rec, total) {
+        await dio.download(videoUrl, filePath, onReceiveProgress: (rec, total) {
           downloadPerct = rec / total;
           notifyListeners();
         });
-
-        await ImageGallerySaver.saveFile(
-            '${directory.path}/${videoId.toString()}.mp4');
+        await ImageGallerySaver.saveFile(filePath);
       } catch (e) {
         rethrow;
       } finally {
         isButtonDisabled = false;
         notifyListeners();
       }
+
       Fluttertoast.showToast(
-          msg: "Video Downloaded to Gallery", gravity: ToastGravity.BOTTOM);
+        msg: "Video Downloaded to Gallery",
+        gravity: ToastGravity.BOTTOM,
+      );
     } catch (e) {
       rethrow;
     } finally {
@@ -164,43 +169,39 @@ class DownloadServices extends ChangeNotifier {
       } else {
         await Permission.storage.request();
       }
+
       final photomodelBox = Hive.box<PhotoModel>(photoBox);
       final Dio dio = Dio();
       final linkEdit = link.replaceAll(" ", "").split("/");
+      final String toSendLink =
+          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
+      final String tempDir = await getDir();
+      final directory = Directory(tempDir);
+      final String filePath = '${directory.path}/${linkEdit[4]}.jpg';
+      if (fileExistsOrNot(filePath)) {
+        isButtonDisabled = false;
+        notifyListeners();
+        return Fluttertoast.showToast(
+          msg: "Photo already exists in Download folder",
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
 
-      final jsonFetchData = await dio.get(
-          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}' +
-              "/?__a=1");
-
+      final jsonFetchData = await dio.get(toSendLink);
       final photoUrl = jsonFetchData.data['graphql']["shortcode_media"]
           ['display_url'] as String;
       final photoID =
           jsonFetchData.data['graphql']["shortcode_media"]['id'] as String;
-      final String toSendLink =
-          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
-
-      final String tempDir = await getDir();
-      final directory = Directory(tempDir);
-
-      if (File('${directory.path}/${photoID.toString()}.jpg').existsSync()) {
-        isButtonDisabled = false;
-        notifyListeners();
-        return Fluttertoast.showToast(
-            msg: "Photo already exists in Download folder",
-            gravity: ToastGravity.BOTTOM);
-      }
-
-      photomodelBox.add(PhotoModel(photoID, photoUrl, toSendLink,
-          '${directory.path}/${photoID.toString()}.jpg'));
 
       try {
         await dio.download(
           photoUrl,
-          '${directory.path}/${photoID.toString()}.jpg',
+          filePath,
         );
 
-        await ImageGallerySaver.saveFile(
-            '${directory.path}/${photoID.toString()}.jpg');
+        photomodelBox.add(PhotoModel(photoID, toSendLink, filePath));
+
+        await ImageGallerySaver.saveFile(filePath);
       } catch (e) {
         rethrow;
       } finally {
@@ -214,6 +215,18 @@ class DownloadServices extends ChangeNotifier {
     } finally {
       isButtonDisabled = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> mediaToDownload() async {
+    if (textController.text.split('/').contains('reel') ||
+        textController.text.split('/').contains('tv')) {
+      await downloadReels(textController.text);
+    } else if (textController.text.split('/').contains('p')) {
+      await downloadPhotos(textController.text);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Link not supported", gravity: ToastGravity.CENTER);
     }
   }
 }
