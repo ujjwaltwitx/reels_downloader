@@ -225,8 +225,7 @@ class DownloadServices extends ChangeNotifier {
     } else if (textController.text.split('/').contains('p')) {
       await downloadPhotos(textController.text);
     } else {
-      Fluttertoast.showToast(
-          msg: "Link not supported", gravity: ToastGravity.CENTER);
+      Fluttertoast.showToast(msg: "Invalid Link", gravity: ToastGravity.CENTER);
     }
   }
 }
