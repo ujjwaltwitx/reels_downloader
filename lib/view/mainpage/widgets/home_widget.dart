@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:reels_downloader/controller/download_controller/download_services.dart';
 import 'package:reels_downloader/main.dart';
 import 'package:reels_downloader/model/ads/ad_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:reels_downloader/view/mainpage/widgets/download_status.dart';
 import 'package:reels_downloader/view/mainpage/widgets/recents_user_widget.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class HomeWidget extends ConsumerWidget {
   @override
