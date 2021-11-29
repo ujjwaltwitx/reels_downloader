@@ -85,6 +85,6 @@ class RecentUserWidget extends ConsumerWidget {
           ),
         ],
       );
-    });
+    },);
   }
 }

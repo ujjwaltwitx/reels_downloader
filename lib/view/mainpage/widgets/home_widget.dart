@@ -100,19 +100,21 @@ class HomeWidget extends ConsumerWidget {
                             height: constraints.maxHeight * 0.2,
                             child: DownloadStatusWidget(),
                           ),
-                        SizedBox(
-                          height: constraints.maxHeight * 0.2,
-                          child: RecentUserWidget(constraints),
-                        ),
+                        if (downProvider.showDownloads)
+                          SizedBox(
+                            height: constraints.maxHeight * 0.2,
+                            child: RecentUserWidget(constraints),
+                          ),
                         StatefulBuilder(
                           builder: (context, setState) => Container(
                             width: double.infinity,
                             height: 100.0,
                             alignment: Alignment.center,
                             child: AdWidget(
-                                ad: AdServices.createBannerAd()..load()),
+                              ad: AdServices.createBannerAd()..load(),
+                            ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   );

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +19,6 @@ class VideoScreen extends ConsumerWidget {
       builder: (context, Box<VideoModel> box, _) {
         return LayoutBuilder(
           builder: (context, constraints) {
-            final videoListReversed = box.values.toList().reversed;
             if (box.isEmpty) {
               return Center(
                 child: SvgPicture.asset(
@@ -28,13 +26,14 @@ class VideoScreen extends ConsumerWidget {
                 ),
               );
             }
+            final videoListReversed = box.values.toList().reversed;
             return ListView.builder(
               itemBuilder: (context, index) {
                 if (videoListReversed.elementAt(index) == null) {
                   return null;
                 } else {
                   return Container(
-                    margin: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.all(8),
                     height: constraints.maxHeight * 0.9,
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -42,58 +41,53 @@ class VideoScreen extends ConsumerWidget {
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2), //color of shadow
-                          spreadRadius: 3, //spread radius
-                          blurRadius: 7, // blur radius
-                          offset:
-                              const Offset(0, 2), // changes position of shadow
-                          //first paramerter of offset is left-right
-                          //second parameter is top to down
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 7,
+                          offset: const Offset(0, 2),
                         ),
-                        //you can set more BoxShadow() here
                       ],
                     ),
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(8),
-                                    padding: const EdgeInsets.all(5),
-                                    height: constraints.maxHeight * 0.08,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.black12,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        launch(
-                                          "https://www.instagram.com/${videoListReversed.elementAt(index).ownerId}",
-                                        );
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          videoListReversed
-                                              .elementAt(index)
-                                              .ownerThumbnailUrl,
-                                        ),
-                                        radius: constraints.maxHeight * 0.03,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(5),
+                                  height: constraints.maxHeight * 0.08,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black12,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      launch(
+                                        "https://www.instagram.com/${videoListReversed.elementAt(index).ownerId}",
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        videoListReversed
+                                            .elementAt(index)
+                                            .ownerThumbnailUrl,
                                       ),
+                                      radius: constraints.maxHeight * 0.03,
                                     ),
                                   ),
-                                  Text(
-                                    videoListReversed.elementAt(index).ownerId,
-                                    style:
-                                        const TextStyle(color: Colors.black87),
-                                  )
-                                ],
-                              ),
-                              Stack(alignment: Alignment.center, children: [
+                                ),
+                                Text(
+                                  videoListReversed.elementAt(index).ownerId,
+                                  style: const TextStyle(color: Colors.black87),
+                                )
+                              ],
+                            ),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
                                 SizedBox(
                                   height: constraints.maxHeight * 0.8,
                                   width: double.infinity,
@@ -121,71 +115,74 @@ class VideoScreen extends ConsumerWidget {
                                       size: 100,
                                     ),
                                   ),
-                                )
-                              ]),
-                              SizedBox(
-                                height: constraints.maxHeight * 0.08,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                      splashRadius: 2,
-                                      onPressed: () async {
-                                        final file = File(videoListReversed
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: constraints.maxHeight * 0.08,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    splashRadius: 2,
+                                    onPressed: () async {
+                                      final file = File(
+                                        videoListReversed
                                             .elementAt(index)
-                                            .videoPath);
-
-                                        box.deleteAt(
-                                            box.values.length - index - 1);
-                                        await file.delete();
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.black54,
-                                      ),
+                                            .videoPath,
+                                      );
+                                      box.deleteAt(
+                                          box.values.length - index - 1);
+                                      await file.delete();
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.black54,
                                     ),
-                                    IconButton(
-                                      splashRadius: 2,
-                                      onPressed: () {
-                                        Clipboard.setData(
-                                          ClipboardData(
-                                            text: videoListReversed
-                                                .elementAt(index)
-                                                .videoUrl,
-                                          ),
-                                        );
-                                        Fluttertoast.showToast(
-                                          msg: "Copied To Clipboard",
-                                          gravity: ToastGravity.BOTTOM,
-                                          backgroundColor: Colors.white,
-                                          textColor:
-                                              const Color.fromRGBO(0, 0, 0, 1),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.copy,
-                                        color: Colors.black54,
-                                      ),
+                                  ),
+                                  IconButton(
+                                    splashRadius: 2,
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                          text: videoListReversed
+                                              .elementAt(index)
+                                              .videoUrl,
+                                        ),
+                                      );
+                                      Fluttertoast.showToast(
+                                        msg: "Video Link Copied To Clipboard",
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.white,
+                                        textColor:
+                                            const Color.fromRGBO(0, 0, 0, 1),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.copy,
+                                      color: Colors.black54,
                                     ),
-                                    IconButton(
-                                      splashRadius: 2,
-                                      onPressed: () {
-                                        Share.shareFiles([
+                                  ),
+                                  IconButton(
+                                    splashRadius: 2,
+                                    onPressed: () {
+                                      Share.shareFiles(
+                                        [
                                           videoListReversed
                                               .elementAt(index)
                                               .videoPath
-                                        ]);
-                                      },
-                                      icon: const Icon(
-                                        Icons.share,
-                                        color: Colors.black54,
-                                      ),
+                                        ],
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.share,
+                                      color: Colors.black54,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         );
                       },
                     ),

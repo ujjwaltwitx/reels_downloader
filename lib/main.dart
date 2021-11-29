@@ -53,7 +53,9 @@ class _LandingPageState extends State<LandingPage> {
     getPermission();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: SafeArea(
+        child: MainPage(),
+      ),
     );
   }
 }
