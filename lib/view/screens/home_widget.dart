@@ -8,6 +8,7 @@ import 'package:reels_downloader/main.dart';
 // import 'package:reels_downloader/model/ads/ad_model.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:reels_downloader/view/widgets/downloading_widget.dart';
+import 'package:reels_downloader/view/widgets/textfield_widget.dart';
 
 import '../widgets/button_widget.dart';
 import '../widgets/outline_button_widget.dart';
@@ -56,29 +57,10 @@ class HomeWidget extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(
-                  height: constraints.maxHeight * 0.1,
-                  child: TextField(
-                    focusNode: focusnode,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: TextFieldWidget(
                     controller: downProvider.textController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 8),
-                      hintText: "Paste Instagram Photo or Reel URL here...",
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Color.fromARGB(255, 110, 112, 110),
-                          width: 2,
-                        ),
-                      ),
-                    ),
                   ),
                 ),
                 Row(
@@ -98,16 +80,24 @@ class HomeWidget extends ConsumerWidget {
                     //     ),
                     //   ),
                     // ),
-                    Expanded(child: OutlineButtonWidget()),
+                    Expanded(child: OutlineButtonWidget(
+                      onTap: () {
+                        downProvider.getClipData();
+                      },
+                    )),
                     const SizedBox(
                       width: 20,
                     ),
                     Expanded(
                       child: ButtonWidget(
-                        onTap: () async {
-                          await downProvider.downloadReels(
-                              'https://www.instagram.com/reel/CStvM80DsDc/?utm_medium=copy_link');
-                        },
+                        onTap: downProvider.isButtonDisabled
+                            ? () {}
+                            : () async {
+                                await downProvider.downloadReels();
+                              },
+                        title: downProvider.isButtonDisabled
+                            ? 'Downloading'
+                            : 'Download',
                       ),
                     )
                     // Expanded(

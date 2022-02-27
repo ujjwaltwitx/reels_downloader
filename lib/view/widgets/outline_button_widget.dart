@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class OutlineButtonWidget extends StatelessWidget {
-  const OutlineButtonWidget({Key? key}) : super(key: key);
+  const OutlineButtonWidget({Key? key, required this.onTap}) : super(key: key);
+
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,9 @@ class OutlineButtonWidget extends StatelessWidget {
         child: InkWell(
           splashColor: Color.fromARGB(83, 33, 149, 243),
           borderRadius: BorderRadius.circular(10),
-          onTap: () {},
+          onTap: () {
+            onTap();
+          },
           child: Container(
             alignment: Alignment.center,
             width: double.infinity,

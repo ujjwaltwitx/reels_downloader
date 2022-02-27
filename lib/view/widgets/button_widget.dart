@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
   final Function onTap;
-  ButtonWidget({Key? key, required this.onTap}) : super(key: key);
+  final String title;
+  ButtonWidget({Key? key, required this.onTap, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class ButtonWidget extends StatelessWidget {
             alignment: Alignment.center,
             width: double.infinity,
             padding: EdgeInsets.all(14),
-            child: Text("Download"),
+            child: Text(title),
             color: Colors.transparent,
           ),
         ),

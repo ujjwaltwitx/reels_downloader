@@ -3,8 +3,16 @@ part 'video_model.g.dart';
 
 @HiveType(typeId: 1)
 class VideoModel {
-  VideoModel(this.videoId, this.videoUrl, this.thumbnailUrl, this.ownerId,
-      this.ownerThumbnailUrl, this.videoPath, this.thumbnailPath);
+  VideoModel({
+    required this.videoId,
+    required this.videoUrl,
+    required this.thumbnailUrl,
+    required this.ownerId,
+    required this.ownerThumbnailUrl,
+    required this.videoPath,
+    required this.thumbnailPath,
+    required this.viewCount,
+  });
 
   @HiveField(0)
   final String thumbnailUrl;
@@ -26,4 +34,7 @@ class VideoModel {
 
   @HiveField(6)
   final String thumbnailPath;
+
+  @HiveField(7)
+  final int viewCount;
 }

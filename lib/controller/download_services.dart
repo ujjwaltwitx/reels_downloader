@@ -10,9 +10,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:reels_downloader/utilities/snackbar.dart';
 
 import '../main.dart';
-import '../model/ads/ad_model.dart';
+// import '../model/ads/ad_model.dart';
 // import '../model/photo/photo_model.dart';
 // import '../model/useraccounts/user_model.dart';
 import '../model/video/video_model.dart';
@@ -32,11 +33,15 @@ class DownloadServices extends ChangeNotifier {
   double downloadPerct = 0;
   bool isButtonDisabled = false;
 
-  final ad = AdServices.createBannerAd()..load();
+  // final ad = AdServices.createBannerAd()..load();
 
-  void changeTextContData(String text) {
-    textController.text = text;
-    notifyListeners();
+  void pasteAndVerifyLink() {
+    if (textController.text.split('/').contains('www.instagram.com'))
+      notifyListeners();
+    else {
+      showSnackbar(message: "Invalid Url");
+      return;
+    }
   }
 
   void toggleIntent() {
@@ -46,7 +51,9 @@ class DownloadServices extends ChangeNotifier {
   Future<void> getClipData() async {
     await Clipboard.getData(Clipboard.kTextPlain).then((value) {
       if (value!.text!.split('/').contains('www.instagram.com')) {
-        changeTextContData(value.text!);
+        textController.text = (value.text)!;
+      } else {
+        showSnackbar(message: "Not a valid instagram link");
       }
     });
   }
@@ -69,8 +76,9 @@ class DownloadServices extends ChangeNotifier {
     return File(path).existsSync();
   }
 
-  Future<void> downloadReels(String link) async {
+  Future<void> downloadReels() async {
     isButtonDisabled = true;
+    pasteAndVerifyLink();
     notifyListeners();
     try {
       if (await Permission.storage.isGranted) {
@@ -79,6 +87,7 @@ class DownloadServices extends ChangeNotifier {
       }
       final videomodelBox = Hive.box<VideoModel>(videoBox);
       final Dio dio = Dio();
+      final String link = textController.text;
       final linkEdit = link.replaceAll(" ", "").split("/");
       final String mediaLink =
           '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
@@ -88,10 +97,7 @@ class DownloadServices extends ChangeNotifier {
       final String filePath = '${directory.path}/${linkEdit[4]}.mp4';
 
       if (fileExistsOrNot(filePath)) {
-        Fluttertoast.showToast(
-          msg: "Video exists in Download folder",
-          gravity: ToastGravity.CENTER,
-        );
+        showSnackbar(message: "Video exists in download folder");
         return;
       }
 
@@ -141,16 +147,24 @@ class DownloadServices extends ChangeNotifier {
         }
       }
 
-      videomodelBox.add(
-        VideoModel(videoId, mediaLink, videoThumbnailUrl, accountName,
-            accountThumbnailUrl, filePath, thumbnailDir),
-      );
-
       try {
         await dio.download(videoUrl, filePath, onReceiveProgress: (rec, total) {
           downloadPerct = rec / total;
           notifyListeners();
         });
+
+        videomodelBox.add(
+          VideoModel(
+            videoId: videoId,
+            videoUrl: mediaLink,
+            thumbnailUrl: videoThumbnailUrl,
+            ownerId: accountName,
+            ownerThumbnailUrl: accountThumbnailUrl,
+            videoPath: filePath,
+            thumbnailPath: thumbnailDir,
+            viewCount: int.parse(viewCount),
+          ),
+        );
         await ImageGallerySaver.saveFile(filePath);
       } catch (e) {
         rethrow;
