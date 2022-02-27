@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reels_downloader/controller/download_services.dart';
 
 class DownloadingWidget extends ConsumerWidget {
-  const DownloadingWidget({Key? key}) : super(key: key);
+  final String imgUrl;
+  const DownloadingWidget({Key? key, required this.imgUrl}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final downloadPerct = ref.watch(downloadNotifier).downloadPerct;
@@ -20,12 +21,21 @@ class DownloadingWidget extends ConsumerWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter),
       ),
-      child: Center(
-        child: CircularProgressIndicator(
-          value: downloadPerct,
-          backgroundColor: Colors.white,
-          color: Color.fromARGB(255, 6, 165, 11),
-        ),
+      child: Stack(
+        children: [
+          if (imgUrl.isEmpty)
+            Image.network(
+              imgUrl,
+              fit: BoxFit.cover,
+            ),
+          Center(
+            child: CircularProgressIndicator(
+              value: downloadPerct,
+              backgroundColor: Colors.white,
+              color: Color.fromARGB(255, 6, 165, 11),
+            ),
+          ),
+        ],
       ),
     );
   }

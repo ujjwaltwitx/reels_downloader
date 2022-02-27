@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:reels_downloader/model/video/video_model.dart';
+import 'package:reels_downloader/view/widgets/viewcount_widget.dart';
 
 import 'video_player_widget.dart';
 
 class DownloadedWidget extends StatelessWidget {
-  const DownloadedWidget({Key? key}) : super(key: key);
+  final VideoModel videoModel;
+  final Function onTap;
+  const DownloadedWidget({
+    Key? key,
+    required this.videoModel,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +27,48 @@ class DownloadedWidget extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(
-              'https://images.unsplash.com/photo-1645771845014-7077d5d0f058?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60',
+              videoModel.thumbnailUrl,
               width: width,
               height: (width / 9) * 16,
               fit: BoxFit.cover,
             ),
           ),
           Positioned(
-            child: Text('1.4m'),
+            child: ViewCountText(
+              fontSize: 14,
+              viewcount: videoModel.viewCount,
+            ),
             bottom: 15,
             left: 15,
+          ),
+          Positioned(
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                onPressed: () {
+                  onTap();
+                },
+                icon: Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            bottom: 10,
+            right: 10,
           ),
           Center(
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => VideoPlayerWidget(),
+                    builder: (context) => VideoPlayerWidget(
+                      videoPath: videoModel.videoPath,
+                      accountName: videoModel.ownerId,
+                      viewCount: videoModel.viewCount,
+                      imgPath: videoModel.ownerThumbnailUrl,
+                    ),
                   ),
                 );
               },

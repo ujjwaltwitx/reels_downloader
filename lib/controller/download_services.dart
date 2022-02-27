@@ -32,6 +32,7 @@ class DownloadServices extends ChangeNotifier {
   bool receiveIntent = true;
   double downloadPerct = 0;
   bool isButtonDisabled = false;
+  String? imgUrl = '';
 
   // final ad = AdServices.createBannerAd()..load();
 
@@ -77,7 +78,7 @@ class DownloadServices extends ChangeNotifier {
   }
 
   Future<void> downloadReels() async {
-    isButtonDisabled = true;
+    downloadPerct = 0;
     pasteAndVerifyLink();
     notifyListeners();
     try {
@@ -132,8 +133,10 @@ class DownloadServices extends ChangeNotifier {
       print(videoUrl);
       final appDir = await getApplicationDocumentsDirectory();
       final thumbnailDir = '${appDir.path}/${linkEdit[4]}.jpg';
-
-      showDownloads = true;
+      imgUrl = videoThumbnailUrl;
+      isButtonDisabled = true;
+      notifyListeners();
+      // showDownloads = true;
 
       if (fileExistsOrNot(thumbnailDir)) {
       } else {
@@ -162,7 +165,7 @@ class DownloadServices extends ChangeNotifier {
             ownerThumbnailUrl: accountThumbnailUrl,
             videoPath: filePath,
             thumbnailPath: thumbnailDir,
-            viewCount: int.parse(viewCount),
+            viewCount: viewCount,
           ),
         );
         await ImageGallerySaver.saveFile(filePath);
