@@ -2,7 +2,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class AdServices {
-  static RewardedAd rewardedAd;
+  // static RewardedAd rewardedAd;
   static void initialize() {
     if (MobileAds.instance == null) {
       MobileAds.instance.initialize();
@@ -26,7 +26,7 @@ class AdServices {
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
-          rewardedAd = ad;
+          // rewardedAd = ad;
         },
         onAdFailedToLoad: (LoadAdError error) {},
       ),
@@ -34,7 +34,7 @@ class AdServices {
   }
 
   static Future<void> showRewardedAd() async {
-    await rewardedAd.show(
-        onUserEarnedReward: (RewardedAd ad, RewardItem reward) {});
+    // await rewardedAd.show(
+    //     onUserEarnedReward: (RewardedAd ad, RewardItem reward) {});
   }
 }

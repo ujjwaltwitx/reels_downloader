@@ -5,7 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 class PolicyDialog extends StatelessWidget {
   const PolicyDialog({
     this.radius = 8,
-    @required this.mdFileName,
+    required this.mdFileName,
   });
 
   final double radius;
@@ -61,7 +61,7 @@ class PolicyDialog extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.button.color,
+                  color: Theme.of(context).textTheme.button?.color,
                 ),
               ),
             ),
