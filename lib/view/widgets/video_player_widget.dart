@@ -126,6 +126,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          highlightElevation: 0,
+          focusElevation: 0,
+          hoverElevation: 0,
+          splashColor: Colors.transparent,
           backgroundColor: Colors.transparent,
           elevation: 0,
           onPressed: () {

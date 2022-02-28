@@ -62,6 +62,7 @@ flutter_icons:
 flutter_native_splash:
   color: "#ffffff"
   android: true
+  image: 'assets/logo2.png'
   android_gravity: center
 
 # For information on the generic Dart part of this file, see the

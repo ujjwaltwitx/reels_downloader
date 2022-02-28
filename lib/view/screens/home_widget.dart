@@ -25,14 +25,12 @@ class HomeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final downProvider = ref.watch(downloadNotifier);
-
+    AdServices.createBannerAd();
     ReceiveSharingIntent.getTextStream().listen((String value) {
       downProvider.textController.text = value;
     }, onError: (err) {
       print("getLinkStream error: $err");
     });
-
-    // For sharing or opening urls/text coming from outside the app while the app is closed
     ReceiveSharingIntent.getInitialText().then((String? value) {
       if (value != null) {
         downProvider.textController.text = value;

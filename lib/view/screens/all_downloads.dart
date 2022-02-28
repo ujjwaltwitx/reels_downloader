@@ -27,7 +27,6 @@ class DownloadWidget extends StatelessWidget {
           builder: (context, Box<VideoModel> box, _) {
             final List videoList = box.values.toList();
             final videoListReversed = box.values.toList().reversed;
-            int index = 0;
             return Container(
               padding: EdgeInsets.all(8).copyWith(bottom: 0),
               alignment: Alignment.center,
@@ -40,7 +39,6 @@ class DownloadWidget extends StatelessWidget {
                   mainAxisSpacing: 10,
                 ),
                 children: videoListReversed.map((e) {
-                  index += 1;
                   return DownloadedWidget(
                     videoModel: e,
                     onTap: () {

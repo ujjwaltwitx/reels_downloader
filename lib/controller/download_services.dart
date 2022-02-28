@@ -87,6 +87,7 @@ class DownloadServices extends ChangeNotifier {
     if (cookie == '') {
       await getCookie();
     }
+    isButtonDisabled = true;
     downloadPerct = 0;
     pasteAndVerifyLink();
     notifyListeners();
@@ -101,7 +102,6 @@ class DownloadServices extends ChangeNotifier {
       final linkEdit = link.replaceAll(" ", "").split("/");
       final String mediaLink =
           '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
-      print(mediaLink);
       final String tempDir = await getDir();
       final Directory directory = Directory(tempDir);
       final String filePath = '${directory.path}/${linkEdit[4]}.mp4';
@@ -134,17 +134,11 @@ class DownloadServices extends ChangeNotifier {
       final videoId = shotcodeMedia['code'];
       final videoThumbnailUrl =
           shotcodeMedia['image_versions2']['candidates'][0]['url'];
-      print(videoThumbnailUrl);
       final accountThumbnailUrl = shotcodeMedia['user']['profile_pic_url'];
       final accountName = shotcodeMedia['user']['username'];
       final viewCount = shotcodeMedia['view_count'];
-      print(videoUrl);
       final appDir = await getApplicationDocumentsDirectory();
       final thumbnailDir = '${appDir.path}/${linkEdit[4]}.jpg';
-
-      isButtonDisabled = true;
-      notifyListeners();
-      // showDownloads = true;
 
       if (fileExistsOrNot(thumbnailDir)) {
       } else {
