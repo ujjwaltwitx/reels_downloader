@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
@@ -29,8 +31,8 @@ class ReelCardWidget extends ConsumerWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              videoModel.thumbnailUrl,
+            child: Image.file(
+              File(videoModel.thumbnailPath),
               width: width,
               height: (width / 9) * 16,
               fit: BoxFit.cover,

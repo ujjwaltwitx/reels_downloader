@@ -25,12 +25,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
 
+  void play() async {
+    await _controller.play();
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.file(File(widget.videoPath));
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);
+    play();
   }
 
   @override
@@ -42,96 +48,99 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          FutureBuilder(
-            future: _initializeVideoPlayerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      // If the video is playing, pause it.
-                      if (_controller.value.isPlaying) {
-                        _controller.pause();
-                      } else {
-                        // If the video is paused, play it.
-                        _controller.play();
-                      }
-                    });
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: width,
-                    height: (width / 9) * 16,
-                    child: Stack(
-                      children: [
-                        Center(child: VideoPlayer(_controller)),
-                        Positioned(
-                          child: Text('Reels'),
-                          top: 35,
-                          right: 15,
-                        ),
-                        Positioned(
-                          bottom: 20,
-                          left: 20,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ViewCountText(
-                                viewcount: widget.viewCount,
-                                fontSize: 14,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      widget.imgPath,
-                                    ),
-                                    radius: 20,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(widget.accountName)
-                                ],
-                              )
-                            ],
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            FutureBuilder(
+              future: _initializeVideoPlayerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        // If the video is playing, pause it.
+                        if (_controller.value.isPlaying) {
+                          _controller.pause();
+                        } else {
+                          // If the video is paused, play it.
+                          _controller.play();
+                        }
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: width,
+                      height: MediaQuery.of(context).size.height,
+                      child: Stack(
+                        children: [
+                          Center(child: VideoPlayer(_controller)),
+                          Positioned(
+                            child: Text('Reels'),
+                            top: 15,
+                            right: 15,
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            bottom: 20,
+                            left: 20,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ViewCountText(
+                                  viewcount: widget.viewCount,
+                                  fontSize: 14,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        widget.imgPath,
+                                      ),
+                                      radius: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(widget.accountName)
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          onPressed: () {
+            setState(() {
+              if (_controller.value.isPlaying) {
+                _controller.pause();
               } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                _controller.play();
               }
-            },
+            });
+          },
+          child: Icon(
+            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+            size: 40,
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        onPressed: () {
-          setState(() {
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              _controller.play();
-            }
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-          size: 40,
         ),
       ),
     );

@@ -2,12 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'model/ads/ad_model.dart';
+import 'controller/ad_model.dart';
 import 'model/photo/photo_model.dart';
 import 'model/useraccounts/user_model.dart';
 import 'model/video/video_model.dart';
@@ -25,7 +26,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
   final dir = await getApplicationDocumentsDirectory();
-  AdServices.initialize();
+  await MobileAds.instance.initialize();
+  AdServices.createBannerAd();
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(VideoModelAdapter());
   Hive.registerAdapter(PhotoModelAdapter());

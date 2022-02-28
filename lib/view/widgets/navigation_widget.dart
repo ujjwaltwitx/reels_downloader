@@ -63,12 +63,14 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   child: Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: first ? Colors.blue : Colors.white,
+                      color: first
+                          ? Color.fromARGB(255, 235, 8, 121)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(40),
                       boxShadow: [
                         if (first)
                           const BoxShadow(
-                            color: Colors.blue,
+                            color: Color.fromARGB(255, 235, 8, 121),
                             blurRadius: 8,
                           ),
                         const BoxShadow(color: Colors.transparent)
@@ -98,12 +100,14 @@ class _NavigationWidgetState extends State<NavigationWidget> {
                   child: Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: second ? Colors.blue : Colors.white,
+                      color: second
+                          ? Color.fromARGB(255, 235, 8, 121)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(40),
                       boxShadow: [
                         if (second)
                           const BoxShadow(
-                            color: Colors.blue,
+                            color: Color.fromARGB(255, 235, 8, 121),
                             blurRadius: 8,
                           ),
                         const BoxShadow(color: Colors.transparent)

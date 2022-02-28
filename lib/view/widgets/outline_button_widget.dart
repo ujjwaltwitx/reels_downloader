@@ -11,11 +11,11 @@ class OutlineButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
-        border: Border.all(color: Colors.blue, width: 2),
+        border: Border.all(color: Color.fromARGB(255, 235, 8, 121), width: 2),
       ),
       child: Material(
         child: InkWell(
-          splashColor: Color.fromARGB(83, 33, 149, 243),
+          splashColor: Color.fromARGB(131, 235, 8, 122),
           borderRadius: BorderRadius.circular(10),
           onTap: () {
             onTap();
@@ -26,7 +26,7 @@ class OutlineButtonWidget extends StatelessWidget {
             padding: EdgeInsets.all(12),
             child: Text(
               "Paste",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: Color.fromARGB(255, 235, 8, 121)),
             ),
             color: Colors.transparent,
           ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:reels_downloader/controller/ad_model.dart';
 import 'package:reels_downloader/controller/download_services.dart';
 import 'package:reels_downloader/view/widgets/downloading_widget.dart';
 import 'package:reels_downloader/view/widgets/textfield_widget.dart';
@@ -22,6 +25,18 @@ class HomeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final downProvider = ref.watch(downloadNotifier);
+
+    ReceiveSharingIntent.getTextStream().listen((String value) {
+      downProvider.textController.text = value;
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then((String? value) {
+      downProvider.textController.text = value!;
+    });
+
     return GestureDetector(
       onTap: () => focusnode.unfocus(),
       child: Padding(
@@ -93,6 +108,11 @@ class HomeWidget extends ConsumerWidget {
                       Expanded(child: VideoCarousel()),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: AdServices.ad!.size.height.toDouble(),
+                  width: double.infinity,
+                  child: AdWidget(ad: AdServices.ad!),
                 ),
               ],
             );

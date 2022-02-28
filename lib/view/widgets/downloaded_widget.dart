@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:reels_downloader/model/video/video_model.dart';
 import 'package:reels_downloader/view/widgets/viewcount_widget.dart';
@@ -26,8 +28,8 @@ class DownloadedWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              videoModel.thumbnailUrl,
+            child: Image.file(
+              File(videoModel.thumbnailPath),
               width: width,
               height: (width / 9) * 16,
               fit: BoxFit.cover,

@@ -10,11 +10,11 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Color.fromARGB(255, 235, 8, 121),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           const BoxShadow(
-            color: Colors.blue,
+            color: Color.fromARGB(255, 235, 8, 121),
             blurRadius: 8,
             spreadRadius: -2,
             offset: Offset(0, 5),

@@ -45,6 +45,7 @@ class DownloadWidget extends StatelessWidget {
                     videoModel: e,
                     onTap: () {
                       File(e.videoPath).delete();
+                      File(e.thumbnailPath).delete();
                       Hive.box<VideoModel>(videoBox).deleteAt(
                         videoList.indexOf(e),
                       );
