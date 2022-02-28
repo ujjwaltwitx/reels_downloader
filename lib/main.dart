@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:reels_downloader/controller/download_services.dart';
 
 import 'controller/ad_model.dart';
 import 'model/photo/photo_model.dart';
@@ -24,7 +25,8 @@ const String photoBox = 'photomodel';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
+  await DownloadServices.instance.getCookie();
   final dir = await getApplicationDocumentsDirectory();
   await MobileAds.instance.initialize();
   AdServices.createBannerAd();

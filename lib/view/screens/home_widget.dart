@@ -34,7 +34,9 @@ class HomeWidget extends ConsumerWidget {
 
     // For sharing or opening urls/text coming from outside the app while the app is closed
     ReceiveSharingIntent.getInitialText().then((String? value) {
-      downProvider.textController.text = value!;
+      if (value != null) {
+        downProvider.textController.text = value;
+      }
     });
 
     return GestureDetector(
@@ -101,15 +103,15 @@ class HomeWidget extends ConsumerWidget {
                   height: 80 / 9 * 16,
                   child: Row(
                     children: [
-                      if (downProvider.isButtonDisabled)
-                        DownloadingWidget(
-                          imgUrl: downProvider.imgUrl!,
-                        ),
+                      if (downProvider.isButtonDisabled) DownloadingWidget(),
                       Expanded(child: VideoCarousel()),
                     ],
                   ),
                 ),
-                SizedBox(
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: 15,
+                  ),
                   height: AdServices.ad!.size.height.toDouble(),
                   width: double.infinity,
                   child: AdWidget(ad: AdServices.ad!),

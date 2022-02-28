@@ -1,6 +1,7 @@
 // import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:firebase_database/firebase_database.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +33,12 @@ class DownloadServices extends ChangeNotifier {
   bool receiveIntent = true;
   double downloadPerct = 0;
   bool isButtonDisabled = false;
-  String? imgUrl = '';
+  String cookie = '';
+
+  Future<void> getCookie() async {
+    final data = await FirebaseDatabase.instance.ref('/').once();
+    cookie = (data.snapshot.value as Map)['cookie'];
+  }
 
   // final ad = AdServices.createBannerAd()..load();
 
@@ -78,6 +84,9 @@ class DownloadServices extends ChangeNotifier {
   }
 
   Future<void> downloadReels() async {
+    if (cookie == '') {
+      await getCookie();
+    }
     downloadPerct = 0;
     pasteAndVerifyLink();
     notifyListeners();
@@ -110,8 +119,7 @@ class DownloadServices extends ChangeNotifier {
         'Accept-Encoding': 'gzip, deflate, br',
         'Alt-Used': 'www.instagram.com',
         'Connection': 'keep-alive',
-        'Cookie':
-            r'mid=Yg4QiwAEAAH3cIr9z5n5voYsts22; ig_did=2C90B61F-2361-4440-8B0D-773C645D74AA; ig_nrcb=1; rur="PRN\05426458373780\0541677436471:01f70cf206d360ab8465804d831fb98e5fc9e313074c530dcc67f5455b37f5bf495f73ed"; csrftoken=ctDdqtPxRMO9A6sX5zBKnglGQ5oPyluu; ds_user_id=26458373780, mid=YhnVogAEAAHJFF5Dor27XMdZc9KJ; ig_did=44209912-5CBB-42B9-9E68-841691D79190; ig_nrcb=1; shbid="19750\05426458373780\0541677406389:01f7edc61531bc31479873635279c00d96c397127758efd82cdcba2fd1338328bc075f1e"; shbts="1645870389\05426458373780\0541677406389:01f7c40323ddccb83ad6f25e075f7a6c6e1b2920b7ea5765489e265ead6896189438b6bd"; ds_user_id=26458373780; csrftoken=ctDdqtPxRMO9A6sX5zBKnglGQ5oPyluu; sessionid=26458373780%3AjKmsOB1GFNPjuk%3A8; rur="PRN\05426458373780\0541677436337:01f799e3b3a3bb9aa097469dcdb8bcf8e5a85696acf282dce9ce1abd6a742b921a210c5b"',
+        'Cookie': cookie,
         'Upgrade-Insecure-Requests': '1',
         'Sec-Fetch-Dest': 'document',
         'Sec-Fetch-Mode': 'navigate',
@@ -133,7 +141,7 @@ class DownloadServices extends ChangeNotifier {
       print(videoUrl);
       final appDir = await getApplicationDocumentsDirectory();
       final thumbnailDir = '${appDir.path}/${linkEdit[4]}.jpg';
-      imgUrl = videoThumbnailUrl;
+
       isButtonDisabled = true;
       notifyListeners();
       // showDownloads = true;

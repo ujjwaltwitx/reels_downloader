@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "955018786297",
+    "firebase_url": "https://instagram-reels-download-8ad7c-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "instagram-reels-download-8ad7c",
     "storage_bucket": "instagram-reels-download-8ad7c.appspot.com"
   },
@@ -32,7 +33,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-1332264183046401~1702409693"
     }
   ],
   "configuration_version": "1"
