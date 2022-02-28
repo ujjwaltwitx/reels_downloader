@@ -85,12 +85,13 @@ class DownloadServices extends ChangeNotifier {
 
   Future<void> downloadReels() async {
     isButtonDisabled = true;
+    notifyListeners();
     if (cookie == '') {
       await getCookie();
     }
     downloadPerct = 0;
     pasteAndVerifyLink();
-    notifyListeners();
+
     try {
       if (await Permission.storage.isGranted) {
       } else {
