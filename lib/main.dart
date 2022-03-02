@@ -51,6 +51,7 @@ class _LandingPageState extends State<LandingPage> {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     getPermission();
+    AdServices.createBannerAd();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

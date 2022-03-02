@@ -25,7 +25,7 @@ class HomeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final downProvider = ref.watch(downloadNotifier);
-    AdServices.createBannerAd();
+
     ReceiveSharingIntent.getTextStream().listen((String value) {
       downProvider.textController.text = value;
     }, onError: (err) {

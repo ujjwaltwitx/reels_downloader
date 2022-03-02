@@ -36,8 +36,13 @@ class DownloadServices extends ChangeNotifier {
   String cookie = '';
 
   Future<void> getCookie() async {
-    final data = await FirebaseDatabase.instance.ref('/').once();
-    cookie = (data.snapshot.value as Map)['cookie'];
+    try {
+      final data = await FirebaseDatabase.instance.ref('/').once();
+      cookie = (data.snapshot.value as Map)['cookie'];
+    } catch (e) {
+      showSnackbar(message: "Problem Downloading Reel");
+      return;
+    }
   }
 
   // final ad = AdServices.createBannerAd()..load();
@@ -49,10 +54,6 @@ class DownloadServices extends ChangeNotifier {
       showSnackbar(message: "Invalid Url");
       return;
     }
-  }
-
-  void toggleIntent() {
-    receiveIntent = false;
   }
 
   Future<void> getClipData() async {
@@ -86,11 +87,12 @@ class DownloadServices extends ChangeNotifier {
   Future<void> downloadReels() async {
     isButtonDisabled = true;
     notifyListeners();
+    pasteAndVerifyLink();
     if (cookie == '') {
       await getCookie();
     }
+
     downloadPerct = 0;
-    pasteAndVerifyLink();
 
     try {
       if (await Permission.storage.isGranted) {
@@ -171,18 +173,11 @@ class DownloadServices extends ChangeNotifier {
             viewCount: viewCount,
           ),
         );
-        await ImageGallerySaver.saveFile(filePath);
+        // await ImageGallerySaver.saveFile(filePath);
       } catch (e) {
         rethrow;
-      } finally {
-        isButtonDisabled = false;
-        notifyListeners();
       }
-
-      Fluttertoast.showToast(
-        msg: "Video Downloaded to Gallery",
-        gravity: ToastGravity.BOTTOM,
-      );
+      showSnackbar(message: "Video Downloaded to Gallery");
     } catch (e) {
       rethrow;
     } finally {
