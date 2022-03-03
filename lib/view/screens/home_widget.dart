@@ -26,12 +26,12 @@ class HomeWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final downProvider = ref.watch(downloadNotifier);
 
-    ReceiveSharingIntent.getTextStream().listen((String value) {
+    ReceiveSharingIntent.getTextStream().listen((String value) async {
       downProvider.textController.text = value;
     }, onError: (err) {
       print("getLinkStream error: $err");
     });
-    ReceiveSharingIntent.getInitialText().then((String? value) {
+    ReceiveSharingIntent.getInitialText().then((String? value) async {
       if (value != null) {
         downProvider.textController.text = value;
       }
@@ -81,7 +81,7 @@ class HomeWidget extends ConsumerWidget {
                                 await downProvider.downloadReels();
                               },
                         title: downProvider.isButtonDisabled
-                            ? 'Downloading'
+                            ? 'Downloading...'
                             : 'Download',
                       ),
                     )
@@ -91,10 +91,9 @@ class HomeWidget extends ConsumerWidget {
                   padding: const EdgeInsets.only(top: 14),
                   child: Text(
                     'Recent Downloads',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Color.fromARGB(255, 53, 52, 52)),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Color.fromARGB(255, 53, 52, 52),
+                        ),
                   ),
                 ),
                 SizedBox(
