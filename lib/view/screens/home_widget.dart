@@ -16,7 +16,7 @@ class HomeWidget extends ConsumerWidget {
   final Shader linearGradient = LinearGradient(colors: <Color>[
     Color.fromARGB(255, 240, 167, 33),
     Color.fromARGB(255, 180, 0, 156),
-    Color.fromARGB(255, 228, 59, 101)
+    Color.fromARGB(255, 228, 59, 101),
   ], stops: [
     0.1,
     0.5,
