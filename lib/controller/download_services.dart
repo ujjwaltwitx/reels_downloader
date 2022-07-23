@@ -87,6 +87,7 @@ class DownloadServices extends ChangeNotifier {
 
   Future<void> downloadReels() async {
     isButtonDisabled = true;
+
     notifyListeners();
     if (pasteAndVerifyLink() == false) {
       return;
@@ -102,7 +103,7 @@ class DownloadServices extends ChangeNotifier {
       final String link = textController.text;
       final linkEdit = link.replaceAll(" ", "").split("/");
       final String mediaLink =
-          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1';
+          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1&__d=dis';
       final String tempDir = await getDir();
       final Directory directory = Directory(tempDir);
       final String filePath = '${directory.path}/${linkEdit[4]}.mp4';
