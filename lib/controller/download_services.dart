@@ -103,7 +103,7 @@ class DownloadServices extends ChangeNotifier {
       final String link = textController.text;
       final linkEdit = link.replaceAll(" ", "").split("/");
       final String mediaLink =
-          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}/?__a=1&__d=dis';
+          '${linkEdit[0]}//${linkEdit[2]}/${linkEdit[3]}/${linkEdit[4]}';
       final String tempDir = await getDir();
       final Directory directory = Directory(tempDir);
       final String filePath = '${directory.path}/${linkEdit[4]}.mp4';
@@ -113,33 +113,35 @@ class DownloadServices extends ChangeNotifier {
         return;
       }
 
-      Map<String, String> headers = {
-        'Host': 'www.instagram.com',
-        'User-Agent': 'Mozilla',
-        'Accept': 'text/html,application/xhtml+xml,application/xml',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Alt-Used': 'www.instagram.com',
-        'Cookie': cookie,
-        'Upgrade-Insecure-Requests': '1',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'cross-site',
-        'Cache-Control': 'max-age=0',
-        'TE': 'trailers'
-      };
-      final jsonFetchData = await dio.get(
-        mediaLink,
-        options: Options(headers: headers),
+      // Map<String, String> headers = {
+      //   'Host': 'www.instagram.com',
+      //   'User-Agent': 'Mozilla',
+      //   'Accept': 'text/html,application/xhtml+xml,application/xml',
+      //   'Accept-Language': 'en-US,en;q=0.5',
+      //   'Accept-Encoding': 'gzip, deflate, br',
+      //   'Alt-Used': 'www.instagram.com',
+      //   'Cookie': cookie,
+      //   'Upgrade-Insecure-Requests': '1',
+      //   'Sec-Fetch-Dest': 'document',
+      //   'Sec-Fetch-Mode': 'navigate',
+      //   'Sec-Fetch-Site': 'cross-site',
+      //   'Cache-Control': 'max-age=0',
+      //   'TE': 'trailers'
+      // };
+
+      // const String serverPath = "http://10.0.2.2:8000";
+
+      final jsonFetchData = await dio.post(
+        "http://35.154.157.39/api/getdownloadurl",
+        data: {'share_link': mediaLink},
       );
-      final shotcodeMedia = jsonFetchData.data['items'][0];
-      final videoUrl = shotcodeMedia['video_versions'][0]['url'];
-      final videoId = shotcodeMedia['code'];
-      final videoThumbnailUrl =
-          shotcodeMedia['image_versions2']['candidates'][0]['url'];
-      final accountThumbnailUrl = shotcodeMedia['user']['profile_pic_url'];
-      final accountName = shotcodeMedia['user']['username'];
-      final viewCount = shotcodeMedia['view_count'];
+      final videoUrl = jsonFetchData.data['videoUrl'];
+      final videoId = jsonFetchData.data['videoId'];
+      final videoThumbnailUrl = jsonFetchData.data['videoThumbnailUrl'];
+      final accountThumbnailUrl = jsonFetchData.data['accountThumbnailUrl'];
+      final accountName = jsonFetchData.data['accountName'];
+      final viewCount = jsonFetchData.data['viewCount'];
+
       final appDir = await getApplicationDocumentsDirectory();
       final thumbnailDir = '${appDir.path}/${linkEdit[4]}.jpg';
 

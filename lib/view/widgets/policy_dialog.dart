@@ -36,36 +36,36 @@ class PolicyDialog extends StatelessWidget {
               },
             ),
           ),
-          FlatButton(
-            padding: const EdgeInsets.all(0),
-            color: Theme.of(context).buttonColor,
-            onPressed: () => Navigator.of(context).pop(),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(radius),
-                bottomRight: Radius.circular(radius),
-              ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(radius),
-                  bottomRight: Radius.circular(radius),
-                ),
-              ),
-              alignment: Alignment.center,
-              height: 50,
-              width: double.infinity,
-              child: Text(
-                "CLOSE",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.button?.color,
-                ),
-              ),
-            ),
-          ),
+          // FlatButton(
+          //   padding: const EdgeInsets.all(0),
+          //   color: Theme.of(context).buttonColor,
+          //   onPressed: () => Navigator.of(context).pop(),
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.only(
+          //       bottomLeft: Radius.circular(radius),
+          //       bottomRight: Radius.circular(radius),
+          //     ),
+          //   ),
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.only(
+          //         bottomLeft: Radius.circular(radius),
+          //         bottomRight: Radius.circular(radius),
+          //       ),
+          //     ),
+          //     alignment: Alignment.center,
+          //     height: 50,
+          //     width: double.infinity,
+          //     child: Text(
+          //       "CLOSE",
+          //       style: TextStyle(
+          //         fontSize: 20,
+          //         fontWeight: FontWeight.bold,
+          //         color: Theme.of(context).textTheme.button?.color,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
