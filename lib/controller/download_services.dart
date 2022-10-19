@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,17 +25,17 @@ class DownloadServices extends ChangeNotifier {
   bool receiveIntent = true;
   double downloadPerct = 0;
   bool isButtonDisabled = false;
-  String cookie = '';
+  // String cookie = '';
 
-  Future<void> getCookie() async {
-    try {
-      final data = await FirebaseDatabase.instance.ref('/').once();
-      cookie = (data.snapshot.value as Map)['cookie'];
-    } catch (e) {
-      showSnackbar(message: "Problem downloading, try again");
-      return;
-    }
-  }
+  // Future<void> getCookie() async {
+  //   try {
+  //     final data = await FirebaseDatabase.instance.ref('/').once();
+  //     cookie = (data.snapshot.value as Map)['cookie'];
+  //   } catch (e) {
+  //     showSnackbar(message: "Problem downloading, try again");
+  //     return;
+  //   }
+  // }
 
   bool pasteAndVerifyLink() {
     if (textController.text.split('/').contains('www.instagram.com')) {
@@ -92,9 +91,9 @@ class DownloadServices extends ChangeNotifier {
     if (pasteAndVerifyLink() == false) {
       return;
     }
-    if (cookie == '') {
-      await getCookie();
-    }
+    // if (cookie == '') {
+    //   await getCookie();
+    // }
     await grantPermission();
     downloadPerct = 0;
     try {

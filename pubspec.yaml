@@ -24,16 +24,14 @@ dependencies:
   auto_size_text: ^2.1.0
   cupertino_icons: ^1.0.2
   dio: ^4.0.0
-  firebase_analytics: ^8.3.1
-  firebase_core: ^1.13.1
-  firebase_database: ^9.0.8
   flutter:
     sdk: flutter
   flutter_markdown: ^0.6.4
   flutter_riverpod: ^1.0.3
   flutter_svg: ^0.22.0
   fluttertoast: ^8.0.8
-  google_mobile_ads: ^0.13.2+1
+  # google_mobile_ads: ^0.13.2+1
+  google_mobile_ads: ^2.1.0
   hive: null
   hive_flutter: null
   image_gallery_saver: ^1.6.9
