@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:reels_downloader/controller/ad_model.dart';
 import 'package:reels_downloader/controller/download_services.dart';
@@ -105,14 +105,14 @@ class HomeWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: 15,
-                  ),
-                  height: AdServices.ad!.size.height.toDouble(),
-                  width: double.infinity,
-                  child: AdWidget(ad: AdServices.ad!),
-                ),
+                // Container(
+                //   margin: EdgeInsets.symmetric(
+                //     vertical: 15,
+                //   ),
+                //   height: AdServices.ad!.size.height.toDouble(),
+                //   width: double.infinity,
+                //   child: AdWidget(ad: AdServices.ad!),
+                // ),
               ],
             );
           },

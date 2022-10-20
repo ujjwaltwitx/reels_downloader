@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'controller/ad_model.dart';
+// import 'controller/ad_model.dart';
 import 'model/video/video_model.dart';
 import 'view/screens/mainpage.dart';
 
@@ -23,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   final Directory dir = await getApplicationDocumentsDirectory();
-  await MobileAds.instance.initialize();
+  // await MobileAds.instance.initialize();
   Hive.registerAdapter(VideoModelAdapter());
   Hive.init(dir.path);
   await Hive.openBox<VideoModel>(videoBox);
@@ -45,7 +45,7 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    AdServices.createBannerAd();
+    // AdServices.createBannerAd();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
