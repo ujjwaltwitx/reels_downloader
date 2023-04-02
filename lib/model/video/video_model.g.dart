@@ -17,10 +17,10 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return VideoModel(
-      videoId: fields[2] as String,
-      videoUrl: fields[1] as String,
-      thumbnailUrl: fields[0] as String,
-      ownerId: fields[3] as String,
+      videoId: fields[0] as String,
+      videoUrl: fields[3] as String,
+      thumbnailUrl: fields[2] as String,
+      ownerId: fields[1] as String,
       ownerThumbnailUrl: fields[4] as String,
       videoPath: fields[5] as String,
       thumbnailPath: fields[6] as String,
@@ -33,13 +33,13 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
     writer
       ..writeByte(8)
       ..writeByte(0)
-      ..write(obj.thumbnailUrl)
-      ..writeByte(1)
-      ..write(obj.videoUrl)
-      ..writeByte(2)
       ..write(obj.videoId)
-      ..writeByte(3)
+      ..writeByte(1)
       ..write(obj.ownerId)
+      ..writeByte(2)
+      ..write(obj.thumbnailUrl)
+      ..writeByte(3)
+      ..write(obj.videoUrl)
       ..writeByte(4)
       ..write(obj.ownerThumbnailUrl)
       ..writeByte(5)

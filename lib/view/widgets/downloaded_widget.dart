@@ -35,14 +35,14 @@ class DownloadedWidget extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Positioned(
-            child: ViewCountText(
-              fontSize: 14,
-              viewcount: videoModel.viewCount,
-            ),
-            bottom: 15,
-            left: 15,
-          ),
+          // Positioned(
+          //   child: ViewCountText(
+          //     fontSize: 14,
+          //     viewcount: videoModel.viewCount,
+          //   ),
+          //   bottom: 15,
+          //   left: 15,
+          // ),
           Positioned(
             child: CircleAvatar(
               radius: 20,

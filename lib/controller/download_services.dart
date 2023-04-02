@@ -1,12 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:reels_downloader/utilities/snackbar.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 import '../main.dart';
 import '../model/video/video_model.dart';
@@ -25,17 +28,6 @@ class DownloadServices extends ChangeNotifier {
   bool receiveIntent = true;
   double downloadPerct = 0;
   bool isButtonDisabled = false;
-  // String cookie = '';
-
-  // Future<void> getCookie() async {
-  //   try {
-  //     final data = await FirebaseDatabase.instance.ref('/').once();
-  //     cookie = (data.snapshot.value as Map)['cookie'];
-  //   } catch (e) {
-  //     showSnackbar(message: "Problem downloading, try again");
-  //     return;
-  //   }
-  // }
 
   bool pasteAndVerifyLink() {
     if (textController.text.split('/').contains('www.instagram.com')) {
@@ -86,14 +78,10 @@ class DownloadServices extends ChangeNotifier {
 
   Future<void> downloadReels() async {
     isButtonDisabled = true;
-
     notifyListeners();
     if (pasteAndVerifyLink() == false) {
       return;
     }
-    // if (cookie == '') {
-    //   await getCookie();
-    // }
     await grantPermission();
     downloadPerct = 0;
     try {
@@ -112,35 +100,28 @@ class DownloadServices extends ChangeNotifier {
         return;
       }
 
-      // Map<String, String> headers = {
-      //   'Host': 'www.instagram.com',
-      //   'User-Agent': 'Mozilla',
-      //   'Accept': 'text/html,application/xhtml+xml,application/xml',
-      //   'Accept-Language': 'en-US,en;q=0.5',
-      //   'Accept-Encoding': 'gzip, deflate, br',
-      //   'Alt-Used': 'www.instagram.com',
-      //   'Cookie': cookie,
-      //   'Upgrade-Insecure-Requests': '1',
-      //   'Sec-Fetch-Dest': 'document',
-      //   'Sec-Fetch-Mode': 'navigate',
-      //   'Sec-Fetch-Site': 'cross-site',
-      //   'Cache-Control': 'max-age=0',
-      //   'TE': 'trailers'
-      // };
-
-      // const String serverPath = "http://10.0.2.2:8000";
-
-      final jsonFetchData = await dio.post(
-        "http://35.154.157.39/api/getdownloadurl",
-        data: {'share_link': mediaLink},
+      final data = {"url": '$link'};
+      final response = await http.post(
+        Uri.parse("https://savein.io/api/fetch"),
+        body: json.encode(data),
+        headers: {
+          'content-Type': 'application/json',
+          "origin": "https://savein.io",
+          "referer": "https://savein.io/",
+        },
       );
-      final videoUrl = jsonFetchData.data['videoUrl'];
-      final videoId = jsonFetchData.data['videoId'];
-      final videoThumbnailUrl = jsonFetchData.data['videoThumbnailUrl'];
-      final accountThumbnailUrl = jsonFetchData.data['accountThumbnailUrl'];
-      final accountName = jsonFetchData.data['accountName'];
-      final viewCount = jsonFetchData.data['viewCount'];
-
+      final jsonData = json.decode(response.body);
+      print("Downloading");
+      print(jsonData);
+      final videoId = jsonData['media']['data']['id'];
+      final ownerId = jsonData['media']['data']['user']['username'];
+      final ownerThumbnailUrl =
+          jsonData['media']['data']['user']['profile']['pic']['normal'];
+      final viewCount = jsonData['media']['data']['metrics']['views'];
+      final videoUrl =
+          jsonData['media']['data']['mediaList'][0]['videos'][0]['url'];
+      final videoThumbnailUrl =
+          jsonData['media']['data']['mediaList'][0]['images'][2]['url'];
       final appDir = await getApplicationDocumentsDirectory();
       final thumbnailDir = '${appDir.path}/${linkEdit[4]}.jpg';
 
@@ -165,21 +146,22 @@ class DownloadServices extends ChangeNotifier {
         videomodelBox.add(
           VideoModel(
             videoId: videoId,
+            ownerId: ownerId,
+            ownerThumbnailUrl: ownerThumbnailUrl,
+            viewCount: viewCount,
             videoUrl: mediaLink,
             thumbnailUrl: videoThumbnailUrl,
-            ownerId: accountName,
-            ownerThumbnailUrl: accountThumbnailUrl,
             videoPath: filePath,
             thumbnailPath: thumbnailDir,
-            viewCount: viewCount,
           ),
         );
-        // await ImageGallerySaver.saveFile(filePath);
+        await ImageGallerySaver.saveFile(filePath);
       } catch (e) {
         rethrow;
       }
       showSnackbar(message: "Video Downloaded to Gallery");
     } catch (e) {
+      print(e);
       rethrow;
     } finally {
       isButtonDisabled = false;

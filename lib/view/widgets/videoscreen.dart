@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:open_file/open_file.dart';
+// import 'package:open_file/open_file.dart';
 import '../../../main.dart';
 import '../../../model/video/video_model.dart';
 import 'package:share/share.dart';
@@ -62,8 +62,9 @@ class VideoScreen extends ConsumerWidget {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    launch(
-                                      "https://www.instagram.com/${videoListReversed.elementAt(index).ownerId}",
+                                    launchUrl(
+                                      Uri.parse(
+                                          "https://www.instagram.com/${videoListReversed.elementAt(index).ownerId}"),
                                     );
                                   },
                                   child: CircleAvatar(
@@ -102,9 +103,9 @@ class VideoScreen extends ConsumerWidget {
                                 height: constraints.maxHeight * 0.8,
                                 child: IconButton(
                                   onPressed: () {
-                                    OpenFile.open(videoListReversed
-                                        .elementAt(index)
-                                        .videoPath);
+                                    // OpenFile.open(videoListReversed
+                                    //     .elementAt(index)
+                                    //     .videoPath);
                                   },
                                   icon: const Icon(
                                     Icons.play_arrow_rounded,

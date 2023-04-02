@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.alphax" "\0"
-            VALUE "FileDescription", "reels_downloader" "\0"
+            VALUE "FileDescription", "Reel Downloader" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "reels_downloader" "\0"
+            VALUE "InternalName", "Reel Downloader" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 com.alphax. All rights reserved." "\0"
             VALUE "OriginalFilename", "reels_downloader.exe" "\0"
-            VALUE "ProductName", "reels_downloader" "\0"
+            VALUE "ProductName", "Reel Downloader" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

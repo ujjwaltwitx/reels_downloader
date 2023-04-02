@@ -42,8 +42,8 @@ class RecentUserWidget extends ConsumerWidget {
                                 padding: const EdgeInsets.all(5),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await url_launcher.launch(
-                                        'https://www.instagram.com/${usermodel.values.toList().reversed.elementAt(index).usrname}/');
+                                    await url_launcher.launchUrl(Uri.parse(
+                                        'https://www.instagram.com/${usermodel.values.toList().reversed.elementAt(index).usrname}/'));
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(6),

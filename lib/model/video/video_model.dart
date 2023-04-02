@@ -15,16 +15,16 @@ class VideoModel {
   });
 
   @HiveField(0)
-  final String thumbnailUrl;
-
-  @HiveField(1)
-  final String videoUrl;
-
-  @HiveField(2)
   final String videoId;
 
-  @HiveField(3)
+  @HiveField(1)
   final String ownerId;
+
+  @HiveField(2)
+  final String thumbnailUrl;
+
+  @HiveField(3)
+  final String videoUrl;
 
   @HiveField(4)
   final String ownerThumbnailUrl;

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:open_file/open_file.dart';
+// import 'package:open_file/open_file.dart';
 import 'package:share/share.dart';
 
 import '../../../main.dart';
@@ -61,13 +61,13 @@ class PhotoScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  OpenFile.open(
-                                    photoListReversed
-                                        .elementAt(index)
-                                        .photoPath,
-                                  );
-                                },
+                                // onTap: () {
+                                //   OpenFile.open(
+                                //     photoListReversed
+                                //         .elementAt(index)
+                                //         .photoPath,
+                                //   );
+                                // },
                                 child: SizedBox(
                                   height: constraints.maxHeight * 0.92,
                                   width: double.infinity,
